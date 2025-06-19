@@ -1,0 +1,10 @@
+--Headline: Bold 24/32px;
+--Subtitle-3: Bold 10/16px;
+--Subtitle-2: Bold 12/16px;
+--Subtitle-1: Bold 14/16px;
+
+
+--Body-3: Regular 10/16px;
+--Body-2: Regular 12/16px;
+--Body-1: Regular 14/16px;
+--Caption: Regular 8/12px;
