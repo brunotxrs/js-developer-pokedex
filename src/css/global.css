@@ -1,0 +1,34 @@
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+/* root */
+:root {
+    --primary: #DC0A2D;
+    --font-family: "Roboto", sans-serif;
+    --color-white: #FFF;
+
+    --Headline: Bold 24/32px;
+    --Subtitle-3: Bold 10/16px;
+    --Subtitle-2: Bold 12/16px;
+    --Subtitle-1: Bold 14/16px;
+}
+
+
+/* body */
+body{
+    background-color: var(--primary);
+    font-family: var(--font-family);
+}
+
+
+
+
+
