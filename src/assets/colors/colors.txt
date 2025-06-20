@@ -61,19 +61,9 @@
 }
 
 -- Grayscale --
-.Dark{
-     #212121
-}
-.Medium{
-     #666666
-}
-.Light{
-     #E0E0E0
-}
-.Background{
-     #EFEFEF
-}
-.White{
-     #FFFFFF
-}
+--dark: #212121;
+--medium: #666666;
+--light: #E0E0E0;
+--background: #EFEFEF;
+--white:  #FFFFFF;
 
