@@ -16,29 +16,37 @@
             <h1>Pokédex</h1>
         </span>
 
-        <form>
+        <div class="box-input">
             <label for="iput">
                 <img src="./src/assets/ico/search.svg" alt="">
-                <input type="text" id="iput" placeholder="search">     
+                <input type="text" id="iput" placeholder="search" autocomplete="off">     
             </label>
 
-            <button id="btn">
+            <button id="btn" >
                 <span>#</span>
             </button>
-        </form>
+        </div>
 
-        <div class="select">
-            <form>
-                <label for="number">
-                    <input type="radio" name="text" id="number" value="number">Number
-                </label>
+        <div class="box-select">
 
-                <label for="name">
-                    <input type="radio" name="text" id="name" value="name">Name
-                </label>
-            </form>
+            <div class="select">
+                <span>Sort by:</span>
+                <div class="form">
+                    <label for="number">
+                        <input type="radio" name="text" id="number" value="number">Number
+                    </label>
+                    <label for="name">
+                        <input type="radio" name="text" id="name" value="name">Name
+                    </label>
+                </div>
+            </div>
+
         </div>
     </header>
+    
+    <main>
+       
+    </main>
     
 </body>
 </html>
