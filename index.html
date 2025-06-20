@@ -4,8 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex</title>
+    <link rel="shortcut icon" href="./src/assets/favicon/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./src/css/styles.css">
 </head>
 <body>
+    <header>
+        <span>
+            <svg>
+                <image href="src/assets/ico/pokeball-ffff.svg" x="0" y="0"/>
+            </svg>
+            <h1>Pokédex</h1>
+        </span>
+
+        <form>
+            <label for="iput">
+                <img src="./src/assets/ico/search.svg" alt="">
+                <input type="text" id="iput" placeholder="search">     
+            </label>
+
+            <button id="btn">
+                <span>#</span>
+            </button>
+        </form>
+
+        <div class="select">
+            <form>
+                <label for="number">
+                    <input type="radio" name="text" id="number" value="number">Number
+                </label>
+
+                <label for="name">
+                    <input type="radio" name="text" id="name" value="name">Name
+                </label>
+            </form>
+        </div>
+    </header>
     
 </body>
 </html>
