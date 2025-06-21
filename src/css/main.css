@@ -30,6 +30,7 @@ main {
                     flex-direction: column;
                     border-radius: 0.4375rem;
                     box-shadow: var(--box-shadow);
+                    overflow: hidden;
                     
                     
                     span:nth-child(1){
@@ -59,11 +60,142 @@ main {
                         font-size: var(--body-3);
                         color: var(--dark);
                         padding-bottom: 0.25rem;
+                        
                     }
                     
                 }
 
+                li:hover {
+                    box-shadow: var(--box-shadow-inset);
+                    padding: 0 0.0625rem;
+            
+                    img {
+                        width: 4.4rem;
+                        height: 4.4rem;
+                        margin: 0 auto;
+                        z-index: 10;
+                    }
+                    
+            
+                    span:nth-of-type(2) {
+                        width: 100%;
+                        margin-top: -1.4rem;
+                        height: 2.74rem;
+                        box-shadow: inset 0.0625rem -0.5625rem 0.25rem -0.5625rem var(--medium);
+                        padding-bottom: 0.27rem;
+                    
+                    }
+
+
+                }
+
             }
         } 
+    }
+
+
+    /* area of new component*/
+
+
+}
+
+@media screen and (min-width: 48rem) {
+    main {
+        width: 100%;
+        height: auto;
+
+        .content-pokemon {
+            max-width: 38.75rem;
+            max-height: 31.25rem;
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: var(--box-shadow-inset);
+            overflow-y: hidden;
+            margin: auto;
+
+            .box-pokemon {
+                width: 100%;
+                height: 100%;
+                padding: 0.75rem 0.75rem 0.75rem 1rem;
+                overflow-y: scroll;
+                scrollbar-width: none;   
+
+
+                ol {
+                    width: 100%;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+                    gap: 0.5rem;
+
+                    li {
+                        width: 6.5rem;
+                        height: 6.75rem;
+                        display: flex;
+                        flex-direction: column;
+                        border-radius: 0.4375rem;
+                        box-shadow: var(--box-shadow);
+                        
+                        
+                        span:nth-child(1){
+                            height: 1rem;
+                            text-align: right;
+                            padding: 0.25rem 0.5rem 0 0.5rem;
+                            font-size: var(--caption);
+                            color: var(--medium);
+                            
+                        }
+
+                        img {
+                            width: 4.5rem;
+                            height: 4.5rem;
+                            margin: 0 auto;
+                            z-index: 10;
+                        }
+
+                        span:nth-of-type(2){
+                            background-color: var(--background);
+                            margin-top: -1.5rem;
+                            height: 2.75rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border-radius: 0.4375rem;
+                            font-size: var(--body-3);
+                            color: var(--dark);
+                            padding-bottom: inherit;
+                            padding-top: 1.25rem;
+                        }
+                        
+                    }
+
+
+                    li:hover {
+                        box-shadow: var(--box-shadow-inset);
+                        padding: 0 0.0625rem;
+
+
+                        img {
+                            width: 4.4rem;
+                            height: 4.4rem;
+                            margin: 0 auto;
+                            z-index: 10;
+                        }
+                        
+                
+                        span:nth-of-type(2) {
+                            width: 100%;
+                            margin-top: -1.4rem;
+                            height: 2.74rem;
+                            box-shadow: inset 0.0625rem -0.5625rem 0.25rem -0.5625rem var(--medium);
+                            padding-top: 1.1875rem;
+                        
+                        }
+
+                    }
+
+
+                }
+            } 
+        }
     }
 }
