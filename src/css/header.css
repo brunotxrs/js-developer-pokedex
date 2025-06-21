@@ -144,6 +144,7 @@ header {
                 gap: 1rem;
                 padding: 1.25rem 1rem;
                 border-radius: 0.5rem;
+                z-index: 11;
 
                 label {
                     display: flex;
