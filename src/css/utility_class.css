@@ -69,3 +69,7 @@
 .Water {
    color: #6493EB;
 }
+
+.hidden {
+   display: none;
+}
