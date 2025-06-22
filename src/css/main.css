@@ -99,7 +99,7 @@ main {
     .pokemon-details {
         width: 100%;
 
-        .test {
+        .content-details {
             width: 100%;
              background: 
             linear-gradient(rgba(184, 184, 184, 0.7), rgba(184, 184, 184, 0.7)),
@@ -190,6 +190,101 @@ main {
             margin-top: -56px;
             border-radius: 8px;
             box-shadow: var(--box-shadow-inset);
+            padding: 56px 20px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .type {
+                width: 100%;
+                height: 20px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 16px;
+
+                span {
+                    width: 42px;
+                    height: 20px;
+                    padding: 4px 8px;
+                    border-radius: 10px;
+                    background-color: var(--medium);
+                    color: var(--white);
+                    font-size: var(--subtitle-3);
+                    font-weight: var(--font-weight-bold);
+                    text-align: center;
+                }
+            }
+
+
+            .about {
+                width: 100%;
+                height: 16px;
+                text-align: center;
+                background-color: var(--white);
+
+                span {
+                    font-size: var(--subtitle-1);
+                    font-weight: var(--font-weight-bold);
+                    background-color: var(--white);
+                }
+            }
+
+            .ability {
+                width: 100%;
+                height: 48px;
+                column-count: 3;
+                column-rule: 0.0625rem solid var(--grayscale);
+
+                div {
+                    
+                    width: 103px;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-evenly;
+
+
+
+                    span:nth-child(1) {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+
+                        img {
+                            width: 16px;
+                            height: 16px;
+
+                        }
+
+                        span {
+                            width: 39px;
+                            height: 32px;
+                            padding-top: 2px;
+                            padding-left: 3px;
+                            font-size: var(--body-3);
+                            align-content: center;
+                            font-weight: var(--font-weight-regular);
+                            color: var(--dark);
+                        }
+                    }
+
+                    span:nth-child(2) {
+                        font-size: var(--caption);
+                        font-weight: var(--font-weight-regular);
+                        color: var(--medium);
+                        text-align: center;
+                    }
+                }
+
+                div:nth-of-type(2) > span > img {
+                    rotate: 90deg;
+                }
+            } 
+
         }
 
     }
