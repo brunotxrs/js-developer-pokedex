@@ -97,39 +97,42 @@ main {
 
     .pokemon-details {
         width: 100%;
+        height: 100%;
 
         .content-details {
             width: 100%;
-             background: 
+            height: 13.75rem;
+            background: 
             linear-gradient(rgba(184, 184, 184, 0.7), rgba(184, 184, 184, 0.7)),
             url(../assets/ico/pokeball-ffff.svg) no-repeat top right;
             background-size: calc(100% - 40%);
 
 
             .box-one-details {
-                height: 77px;
+                height: 4.8125rem;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                padding: 20px 20px 24px 20px;
-                gap: 8px;
+                padding: 1.25rem 1.25rem 1.5rem 1.25rem;
+                gap: 0.5rem;
 
 
                 span:nth-child(1) {
-                    width: 32px;
-                    height: 32px;
-                    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.443));
+                    width: 2rem;
+                    height: 2rem;
+                    filter: drop-shadow(0.125rem 0.125rem 0.125rem rgba(0, 0, 0, 0.443));
+                    cursor: pointer;
 
                     img {
-                        width:32px;
-                        height: 32px;
+                        width:2rem;
+                        height: 2rem;
                     }
     
                 }
 
                 span:nth-child(2){
                     width: 100%;
-                    height: 32px;
+                    height: 2rem;
                     display: flex;
                     align-items: end;
                 
@@ -142,8 +145,8 @@ main {
                 }
 
                 span:nth-child(3){
-                    width: 33px;
-                    height: 16px;
+                    width: 2.0625rem;
+                    height: 1rem;
                     display: flex;
                     align-items: self-start;
                     font-size: var(--subtitle-2);
@@ -158,27 +161,29 @@ main {
 
             .box-second-details {
                 width: 100%;
-                height: 144px;
+                height: 9rem;
                 display: flex;
                 align-items: end;
                 justify-content: space-between;
-                padding: 16px 20px;
+                padding: 1rem 1.25rem;
 
                 span > img {
-                    width: 24px;
-                    height: 24px;
-                    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.443));
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    filter: drop-shadow(0.125rem 0.125rem 0.125rem rgba(0, 0, 0, 0.443));
+                    cursor: pointer;
+
                 }
                 
             }
 
 
             .box-third-details {
-                margin-top: -144px;
-                margin-top: -144px;
-                margin: -144px auto 0;
-                width: 200px;
-                height: 200px;
+                margin-top: -9rem;
+                margin-top: -9rem;
+                margin: -9rem auto 0;
+                width: 12.5rem;
+                height: 12.5rem;
             }
 
         }
@@ -186,28 +191,28 @@ main {
 
         .details {
             background-color: var(--white);
-            margin-top: -56px;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             box-shadow: var(--box-shadow-inset);
-            padding: 56px 20px 20px 20px;
+            padding: 3.5rem 1.25rem 1.25rem 1.25rem;
             display: flex;
             flex-direction: column;
-            gap: 22px;
+            gap: 1.375rem;
+            height: 67%;
 
             .type {
                 width: 100%;
-                height: 20px;
+                height: 1.25rem;
                 display: flex;
                 flex-direction: row;
                 justify-content: center;
                 align-items: center;
-                gap: 16px;
+                gap: 1rem;
 
                 span {
-                    width: 42px;
-                    height: 20px;
-                    padding: 4px 8px;
-                    border-radius: 10px;
+                    width: 2.625rem;
+                    height: 1.25rem;
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 0.625rem;
                     background-color: var(--medium);
                     color: var(--white);
                     font-size: var(--subtitle-3);
@@ -219,7 +224,7 @@ main {
 
             .about {
                 width: 100%;
-                height: 16px;
+                height: 1rem;
                 text-align: center;
                 background-color: var(--white);
 
@@ -232,13 +237,13 @@ main {
 
             .ability {
                 width: 100%;
-                height: 48px;
+                height: 3rem;
                 column-count: 3;
                 column-rule: 0.0625rem solid var(--grayscale);
 
                 div {
                     
-                    width: 103px;
+                    width: 6.4375rem;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
@@ -254,16 +259,16 @@ main {
                         justify-content: center;
 
                         img {
-                            width: 16px;
-                            height: 16px;
+                            width: 1rem;
+                            height: 1rem;
 
                         }
 
                         span {
-                            width: 39px;
-                            height: 32px;
-                            padding-top: 2px;
-                            padding-left: 3px;
+                            width: 2.4375rem;
+                            height: 2rem;
+                            padding-top: 0.125rem;
+                            padding-left: 0.1875rem;
                             font-size: var(--body-3);
                             align-content: center;
                             font-weight: var(--font-weight-regular);
@@ -290,7 +295,7 @@ main {
                 font-size: var(--body-3);
                 font-weight: var(--font-weight-regular);
                 color: var(--dark);
-                height: 60px;
+                height: 3.75rem;
                 align-content: center;
 
             }
@@ -298,22 +303,22 @@ main {
             .frame {
                 display: flex;
                 flex-direction: row;
-                gap: 8px;
+                gap: 0.5rem;
 
                 ol:nth-child(1){
-                    padding: 0 4px 0 0;
+                    padding: 0 0.25rem 0 0;
 
                     li {
                         font-size: var(--subtitle-3);
                         font-weight: var(--font-weight-bold);
                         text-align: right;
                         align-content: center;
-                        height: 16px;
+                        height: 1rem;
                     }
                 }
 
                 ol:nth-of-type(2){
-                    padding: 0 0 0 4px;
+                    padding: 0 0 0 0.25rem;
 
                     li {
                         font-size: var(--subtitle-3);
@@ -321,15 +326,15 @@ main {
                         color: var(--dark);
                         text-align: right;
                         align-content: center;
-                        height: 16px;
+                        height: 1rem;
                     }
                 }
 
 
                 span {
                     display: inline-block;
-                    height: 96px;
-                    width: 2px;
+                    height: 6rem;
+                    width: 0.125rem;
                     background-color: var(--grayscale);
                 }
 
@@ -341,16 +346,16 @@ main {
 
                     li {
                         width: 100%;
-                        height: 16px;
+                        height: 1rem;
                         display: flex;
                         align-items: center;
-                        /* padding-top: 5px; */
+                        /* padding-top: 0.3125rem; */
                         
                         input[type="range"] {
                             width: 100%;
-                            height: 2px;
+                            height: 0.125rem;
                             background: var(--grayscale);
-                            border-radius: 4px;
+                            border-radius: 0.25rem;
                             cursor: pointer;
 
                             appearance: none;
@@ -373,8 +378,16 @@ main {
 
     }
 
-
 }
+
+@media screen and (min-width: 25.75rem) {
+    main > .pokemon-details > .details {
+        padding: 3.5rem 1.25rem 0rem 1.25rem;
+        justify-content: space-evenly;
+        height: 76%;
+    }
+}
+
 
 @media screen and (min-width: 48rem) {
     main {
@@ -474,5 +487,304 @@ main {
                 }
             } 
         }
+
+        /* area of component details cards*/
+
+        .pokemon-details {
+            width: 38.75rem;
+            height: 100%;
+            margin: auto;
+
+            .content-details {
+                width: 100%;
+                height: 13.75rem;
+                background: linear-gradient(rgba(184, 184, 184, 0.7), 
+                rgba(184, 184, 184, 0.7)), 
+                url(../assets/ico/pokeball-ffff.svg) no-repeat 22.875rem;
+                background-size: calc(100% - 65%);
+
+                .box-one-details {
+                    height: 4.8125rem;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 1.25rem 1.25rem 1.5rem 1.25rem;
+                    gap: 0.5rem;
+
+
+                    span:nth-child(1) {
+                        width: 2rem;
+                        height: 2rem;
+                        filter: drop-shadow(0.125rem 0.125rem 0.125rem rgba(0, 0, 0, 0.443));
+
+                        img {
+                            width:2rem;
+                            height: 2rem;
+                        }
+
+                    }
+
+                    span:nth-child(2){
+                        width: 100%;
+                        height: 2rem;
+                        display: flex;
+                        align-items: end;
+                    
+                        h1 {
+                            font-size: var(--headline);
+                            color: var(--white);
+
+                        }
+                        
+                    }
+
+                    span:nth-child(3){
+                        width: 2.0625rem;
+                        height: 1rem;
+                        display: flex;
+                        align-items: self-start;
+                        font-size: var(--subtitle-2);
+                        color: var(--white);
+                        font-weight: var(--font-weight-bold);
+                    }
+
+                    
+
+
+                }
+
+                .box-second-details {
+                    width: 100%;
+                    height: 9rem;
+                    display: flex;
+                    align-items: end;
+                    justify-content: space-between;
+                    padding: 1rem 1.25rem;
+
+                    span > img {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        filter: drop-shadow(0.125rem 0.125rem 0.125rem rgba(0, 0, 0, 0.443));
+                    }
+                    
+                }
+
+
+                .box-third-details {
+                    margin-top: -9rem;
+                    margin-top: -9rem;
+                    margin: -9rem auto 0;
+                    width: 12.5rem;
+                    height: 12.5rem;
+                }
+
+            }
+
+
+            .details {
+                background-color: var(--white);
+                border-radius: 0.5rem;
+                box-shadow: var(--box-shadow-inset);
+                padding: 3.5rem 1.25rem 0.5625rem 1.25rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.625rem;
+                height: 49.5625rem;
+
+                .type {
+                    width: 100%;
+                    height: 1.25rem;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 1rem;
+
+                    span {
+                        width: 2.625rem;
+                        height: 1.25rem;
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 0.625rem;
+                        background-color: var(--medium);
+                        color: var(--white);
+                        font-size: var(--subtitle-3);
+                        font-weight: var(--font-weight-bold);
+                        text-align: center;
+                    }
+                }
+
+
+                .about {
+                    width: 100%;
+                    height: 1rem;
+                    text-align: center;
+                    background-color: var(--white);
+
+                    span {
+                        font-size: var(--subtitle-1);
+                        font-weight: var(--font-weight-bold);
+                        background-color: var(--white);
+                    }
+                }
+
+                .ability {
+                    width: 100%;
+                    height: 3rem;
+                    column-count: 3;
+                    column-rule: 0.0625rem solid var(--grayscale);
+
+                    div {
+                        
+                        width: 6.4375rem;
+                        height: 100%;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-evenly;
+                        margin: auto;
+
+
+
+                        span:nth-child(1) {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+
+                            img {
+                                width: 1rem;
+                                height: 1rem;
+
+                            }
+
+                            span {
+                                width: 2.4375rem;
+                                height: 2rem;
+                                padding-top: 0.125rem;
+                                padding-left: 0.1875rem;
+                                font-size: var(--body-3);
+                                align-content: center;
+                                font-weight: var(--font-weight-regular);
+                                color: var(--dark);
+                            }
+                        }
+
+                        span:nth-child(2) {
+                            font-size: var(--caption);
+                            font-weight: var(--font-weight-regular);
+                            color: var(--medium);
+                            text-align: center;
+                        }
+                    }
+
+                    div:nth-of-type(2) > span > img {
+                        rotate: 90deg;
+                    }
+                } 
+
+
+
+                p {
+                    font-size: var(--body-3);
+                    font-weight: var(--font-weight-regular);
+                    color: var(--dark);
+                    height: 3.75rem;
+                    align-content: center;
+
+                }
+
+                .frame {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 0.5rem;
+
+                    ol:nth-child(1){
+                        padding: 0 0.25rem 0 0;
+
+                        li {
+                            font-size: var(--subtitle-3);
+                            font-weight: var(--font-weight-bold);
+                            text-align: right;
+                            align-content: center;
+                            height: 1rem;
+                        }
+                    }
+
+                    ol:nth-of-type(2){
+                        padding: 0 0 0 0.25rem;
+
+                        li {
+                            font-size: var(--subtitle-3);
+                            font-weight: var(--font-weight-regular);
+                            color: var(--dark);
+                            text-align: right;
+                            align-content: center;
+                            height: 1rem;
+                        }
+                    }
+
+
+                    span {
+                        display: inline-block;
+                        height: 6rem;
+                        width: 0.125rem;
+                        background-color: var(--grayscale);
+                    }
+
+
+
+                    ol:nth-of-type(3){
+                        width: 100%;
+                        
+
+                        li {
+                            width: 100%;
+                            height: 1rem;
+                            display: flex;
+                            align-items: center;
+                            /* padding-top: 0.3125rem; */
+                            
+                            input[type="range"] {
+                                width: 100%;
+                                height: 0.125rem;
+                                background: var(--grayscale);
+                                border-radius: 0.25rem;
+                                cursor: pointer;
+
+                                appearance: none;
+
+                            }
+
+                            input[type="range"]::-webkit-slider-thumb {
+                                -webkit-appearance: none;
+                                appearance: none;
+                                
+                            }
+
+                        }
+                    }
+                }
+
+
+
+            }
+
+        }
+
+
+    }
+}
+
+@media screen and (min-width: 64rem) and (orientation: landscape){
+
+    main > .pokemon-details > .details {
+        height: initial;
+    }
+    
+}
+
+@media screen and (min-width: 64rem) and (min-height: 50rem) {
+    main > .pokemon-details > .details {
+        height: 70vh;
     }
 }
