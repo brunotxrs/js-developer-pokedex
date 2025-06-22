@@ -96,6 +96,104 @@ main {
 
     /* area of new component*/
 
+    .pokemon-details {
+        width: 100%;
+
+        .test {
+            width: 100%;
+             background: 
+            linear-gradient(rgba(184, 184, 184, 0.7), rgba(184, 184, 184, 0.7)),
+            url(../assets/ico/pokeball-ffff.svg) no-repeat top right;
+            background-size: calc(100% - 40%);
+
+
+            .box-one-details {
+                height: 77px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 20px 20px 24px 20px;
+                gap: 8px;
+
+
+                span:nth-child(1) {
+                    width: 32px;
+                    height: 32px;
+                    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.443));
+
+                    img {
+                        width:32px;
+                        height: 32px;
+                    }
+    
+                }
+
+                span:nth-child(2){
+                    width: 100%;
+                    height: 32px;
+                    display: flex;
+                    align-items: end;
+                
+                    h1 {
+                        font-size: var(--headline);
+                        color: var(--white);
+
+                    }
+                    
+                }
+
+                span:nth-child(3){
+                    width: 33px;
+                    height: 16px;
+                    display: flex;
+                    align-items: self-start;
+                    font-size: var(--subtitle-2);
+                    color: var(--white);
+                    font-weight: var(--font-weight-bold);
+                }
+
+                
+
+
+            }
+
+            .box-second-details {
+                width: 100%;
+                height: 144px;
+                display: flex;
+                align-items: end;
+                justify-content: space-between;
+                padding: 16px 20px;
+
+                span > img {
+                    width: 24px;
+                    height: 24px;
+                    filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.443));
+                }
+                
+            }
+
+
+            .box-third-details {
+                margin-top: -144px;
+                margin-top: -144px;
+                margin: -144px auto 0;
+                width: 200px;
+                height: 200px;
+            }
+
+        }
+
+
+        .details {
+            background-color: var(--white);
+            margin-top: -56px;
+            border-radius: 8px;
+            box-shadow: var(--box-shadow-inset);
+        }
+
+    }
+
 
 }
 
