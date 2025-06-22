@@ -131,6 +131,8 @@ header {
                 color: var(--white);
                 font-size: var(--subtitle-2);
                 font-weight: var(--font-weight-bold);
+                background: var(--primary);
+                z-index: 11;
             }
             
 
@@ -153,6 +155,7 @@ header {
                     gap: 0.5rem;
                     font-size: var(--subtitle-3);
                     font-weight: var(--font-weight-regular);
+                    color: var(--dark);
 
                     input[type="radio"] {
                         accent-color: var(--primary); 
