@@ -1,6 +1,6 @@
 main {
     width: 100%;
-    height: 99vh;
+    height: 100vh;
 
     .content-pokemon {
         width: 100%;
@@ -93,8 +93,7 @@ main {
         } 
     }
 
-
-    /* area of new component*/
+    /* area of component details cards*/
 
     .pokemon-details {
         width: 100%;
@@ -193,7 +192,7 @@ main {
             padding: 56px 20px 20px 20px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 22px;
 
             .type {
                 width: 100%;
@@ -284,6 +283,91 @@ main {
                     rotate: 90deg;
                 }
             } 
+
+
+
+            p {
+                font-size: var(--body-3);
+                font-weight: var(--font-weight-regular);
+                color: var(--dark);
+                height: 60px;
+                align-content: center;
+
+            }
+
+            .frame {
+                display: flex;
+                flex-direction: row;
+                gap: 8px;
+
+                ol:nth-child(1){
+                    padding: 0 4px 0 0;
+
+                    li {
+                        font-size: var(--subtitle-3);
+                        font-weight: var(--font-weight-bold);
+                        text-align: right;
+                        align-content: center;
+                        height: 16px;
+                    }
+                }
+
+                ol:nth-of-type(2){
+                    padding: 0 0 0 4px;
+
+                    li {
+                        font-size: var(--subtitle-3);
+                        font-weight: var(--font-weight-regular);
+                        color: var(--dark);
+                        text-align: right;
+                        align-content: center;
+                        height: 16px;
+                    }
+                }
+
+
+                span {
+                    display: inline-block;
+                    height: 96px;
+                    width: 2px;
+                    background-color: var(--grayscale);
+                }
+
+
+
+                ol:nth-of-type(3){
+                    width: 100%;
+                    
+
+                    li {
+                        width: 100%;
+                        height: 16px;
+                        display: flex;
+                        align-items: center;
+                        /* padding-top: 5px; */
+                        
+                        input[type="range"] {
+                            width: 100%;
+                            height: 2px;
+                            background: var(--grayscale);
+                            border-radius: 4px;
+                            cursor: pointer;
+
+                            appearance: none;
+
+                        }
+
+                        input[type="range"]::-webkit-slider-thumb {
+                            -webkit-appearance: none;
+                            appearance: none;
+                            
+                        }
+
+                    }
+                }
+            }
+
+
 
         }
 
