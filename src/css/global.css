@@ -37,8 +37,7 @@ html {
     scrollbar-width: none;
 }
 
-body{
-    background-color: var(--primary);
+body {
     font-family: var(--font-family);
     padding: 0.25rem;
     user-select: none;
