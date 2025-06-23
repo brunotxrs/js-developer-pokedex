@@ -1,22 +1,27 @@
-function setupSearchTypeSelection() {
+function setupSearchTypeSelection(onSearchTypeChangeCallback) { 
     const buttonSelect = document.getElementById("btn");
     const boxSelectRadio = document.getElementById("select-radio");
 
-    const radioOptions = document.querySelectorAll('input[name="searchOption"]'); 
+    const radioOptions = document.querySelectorAll('input[name="searchOption"]');
 
     if (!buttonSelect) { console.error("Elemento #btn não encontrado."); return; }
     if (!boxSelectRadio) { console.error("Elemento #select-radio não encontrado."); return; }
-    if (radioOptions.length === 0) { console.error("Nenhum rádio com name='text' encontrado."); return; }
+    if (radioOptions.length === 0) { console.error("Nenhum rádio com name='searchOption' encontrado."); return; }
+
 
     buttonSelect.addEventListener('click', () => {
-        boxSelectRadio.classList.remove('hidden');
+        boxSelectRadio.classList.remove('hidden'); 
     });
 
     radioOptions.forEach(radio => {
         radio.addEventListener('change', (event) => {
             boxSelectRadio.classList.add('hidden');
             const selectedSearchType = event.target.value;
-            console.log("Tipo de busca selecionado:", selectedSearchType);
+            console.log("Tipo de busca selecionado (dentro de search_type.js):", selectedSearchType);
+
+            if (onSearchTypeChangeCallback && typeof onSearchTypeChangeCallback === 'function') {
+                onSearchTypeChangeCallback(selectedSearchType);
+            }
 
             if (selectedSearchType === 'number') {
                 buttonSelect.innerHTML = `<span>#</span>`;
