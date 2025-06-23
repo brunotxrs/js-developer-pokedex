@@ -690,6 +690,7 @@ main {
                     color: var(--dark);
                     height: 3.75rem;
                     align-content: center;
+                    text-align: center;
 
                 }
 
