@@ -1,31 +1,32 @@
-function searchType(){
-    //seleção do tipo de busca
+function setupSearchTypeSelection() {
     const buttonSelect = document.getElementById("btn");
     const boxSelectRadio = document.getElementById("select-radio");
 
-    buttonSelect.addEventListener('click', () => {  
+    const radioOptions = document.querySelectorAll('input[name="searchOption"]'); 
+
+    if (!buttonSelect) { console.error("Elemento #btn não encontrado."); return; }
+    if (!boxSelectRadio) { console.error("Elemento #select-radio não encontrado."); return; }
+    if (radioOptions.length === 0) { console.error("Nenhum rádio com name='text' encontrado."); return; }
+
+    buttonSelect.addEventListener('click', () => {
         boxSelectRadio.classList.remove('hidden');
-    })
+    });
 
-    const radioNumber = document.getElementById('number');
-    const radioName = document.getElementById('name');
+    radioOptions.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            boxSelectRadio.classList.add('hidden');
+            const selectedSearchType = event.target.value;
+            console.log("Tipo de busca selecionado:", selectedSearchType);
 
-    radioNumber.addEventListener("click", () =>{
-        buttonSelect.innerHTML = `<span>#</span>`;
-        buttonSelect.style.textDecoration = "none";
-        boxSelectRadio.classList.add('hidden');
-
-    })
-
-    radioName.addEventListener('click', () => {
-        buttonSelect.innerHTML = `<span>A</span>`;
-        buttonSelect.style.textDecoration = "underline";
-        boxSelectRadio.classList.add('hidden');
-        
-    })
-
-    return
+            if (selectedSearchType === 'number') {
+                buttonSelect.innerHTML = `<span>#</span>`;
+                buttonSelect.style.textDecoration = "none";
+            } else if (selectedSearchType === 'name') {
+                buttonSelect.innerHTML = `<span>A</span>`;
+                buttonSelect.style.textDecoration = "underline";
+            }
+        });
+    });
 }
 
-
-export { searchType };
+export { setupSearchTypeSelection };
