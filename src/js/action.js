@@ -1,4 +1,4 @@
-import { searchType } from './search_type.js';
+import { setupSearchTypeSelection } from './search_type.js';
 import { setupCardDetailsEvents } from './card_details.js';
 import { Pokemon } from './pokemon_model.js'
 
@@ -96,5 +96,5 @@ pokeApi.getPokemons(0, 10).then(pokemonDetailsArray => {
 
 
 
-searchType()
+setupSearchTypeSelection()
 setupCardDetailsEvents()
