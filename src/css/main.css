@@ -105,10 +105,10 @@ main {
         .content-details {
             width: 100%;
             height: 13.75rem;
-            background: 
+            /* background: 
             linear-gradient(rgba(184, 184, 184, 0.7), rgba(184, 184, 184, 0.7)),
             url(../assets/ico/pokeball-ffff.svg) no-repeat top right;
-            background-size: calc(100% - 40%);
+            background-size: calc(100% - 40%); */
 
 
             .box-one-details {
@@ -187,6 +187,14 @@ main {
                 margin: -9rem auto 0;
                 width: 12.5rem;
                 height: 12.5rem;
+
+                text-align: center;
+                
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
 
         }
@@ -196,7 +204,7 @@ main {
             background-color: var(--white);
             border-radius: 0.5rem;
             box-shadow: var(--box-shadow-inset);
-            padding: 3.5rem 1.25rem 1.25rem 1.25rem;
+            padding: 4rem 1.25rem 1.25rem 1.25rem;
             display: flex;
             flex-direction: column;
             gap: 1.375rem;
@@ -214,9 +222,8 @@ main {
                 span {
                     width: 2.625rem;
                     height: 1.25rem;
-                    padding: 0.25rem 0.5rem;
+                    padding: 0.25rem 0 0.5rem;
                     border-radius: 0.625rem;
-                    background-color: var(--medium);
                     color: var(--white);
                     font-size: var(--subtitle-3);
                     font-weight: var(--font-weight-bold);
@@ -229,7 +236,7 @@ main {
                 width: 100%;
                 height: 1rem;
                 text-align: center;
-                background-color: var(--white);
+                background: transparent;
 
                 span {
                     font-size: var(--subtitle-1);

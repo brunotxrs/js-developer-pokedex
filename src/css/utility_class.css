@@ -60,7 +60,11 @@
 
 .grass {
    color: #74CB48;
-   background-color: #74CB48;
+   background: 
+   linear-gradient(hsla(100, 56%, 54%, 0.9), 
+   hsla(100, 56%, 54%, 0.9)), 
+   url(../assets/ico/pokeball-ffff.svg) no-repeat top right;
+   background-size: calc(100% - 40%);
 }
 
 .ground {
