@@ -11,6 +11,13 @@ function convertPokeApiDetailToPokemon(pokemonDetailApi){
     pokemon.type = pokemon.types[0];
     pokemon.photo = pokemonDetailApi.sprites.other.dream_world.front_default || pokemonDetailApi.sprites.front_default;
 
+
+    // *** ADICIONANDO NOVOS CAMPOS PARA DETALHES COMPLETOS ***
+    pokemon.height = pokemonDetailApi.height; // Em decimetros
+    pokemon.weight = pokemonDetailApi.weight; // Em hectogramas
+    pokemon.abilities = pokemonDetailApi.abilities.map(abilitySlot => abilitySlot.ability); // Array de objetos {name: "...", url: "..."}
+    pokemon.stats = pokemonDetailApi.stats; // Array de objetos {base_stat: X, stat: {name: "..."}}
+
     return pokemon
 }
 
@@ -63,6 +70,27 @@ pokeApi.getPokemonByNameOrId = async (idOrName) => {
         throw error;
     }
 };
+
+//  Para buscar a descrição do Pokémon (da API de Species)
+pokeApi.getPokemonDescription = async (idOrName) => {
+    const formattedIdOrName = String(idOrName).toLowerCase();
+    const url = `https://pokeapi.co/api/v2/pokemon-species/${formattedIdOrName}/`;
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Descrição do Pokémon "${idOrName}" não encontrada.`);
+        }
+        const speciesData = await response.json();
+        // A descrição está em 'flavor_text_entries'. Precisamos encontrar uma em português (ou inglês como fallback).
+        const descriptionEntry = speciesData.flavor_text_entries.find(entry => entry.language.name === 'pt'); // Mude 'en' para 'pt' se a API tiver.
+        return descriptionEntry ? descriptionEntry.flavor_text.replace(/[\n\f]/g, ' ') : 'Descrição não disponível.'; // Limpa quebras de linha
+    } catch (error) {
+        console.error('Erro ao buscar descrição do Pokémon:', error);
+        throw error;
+    }
+};
+
+
 
 // *** ESTA É A FUNÇÃO QUE ESTAVA FALTANDO NO SEU api_pokemon.js! ***
 pokeApi.getAllPokemonBasicData = async () => {
