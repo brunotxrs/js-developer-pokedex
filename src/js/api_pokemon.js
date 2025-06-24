@@ -1,8 +1,22 @@
 import { Pokemon } from './pokemon_model.js'
 
+// A função convertPokeApiDetailToPokemon é auxiliar e pode ficar fora do pokeApi, como você já a tem.
+function convertPokeApiDetailToPokemon(pokemonDetailApi){
+    const pokemon = new Pokemon()
+
+    pokemon.number = pokemonDetailApi.id;
+    pokemon.name = pokemonDetailApi.name;
+
+    pokemon.types = pokemonDetailApi.types.map(typeSlot => typeSlot.type.name);
+    pokemon.type = pokemon.types[0];
+    pokemon.photo = pokemonDetailApi.sprites.other.dream_world.front_default || pokemonDetailApi.sprites.front_default;
+
+    return pokemon
+}
+
 const pokeApi = {};
 
-// chamando api e manipulando
+// chamando api e manipulando (lista paginada de Pokémons)
 pokeApi.getPokemons = async (offset = 0 , limit = 5) => {
     const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
 
@@ -14,36 +28,57 @@ pokeApi.getPokemons = async (offset = 0 , limit = 5) => {
         const pokemonDetailsArray = await Promise.all(detailPromises);
         return pokemonDetailsArray;
     } catch (error) {
-        return console.error('Erro na chamada da PokeAPI:', error);
+        // É importante relançar o erro (throw error) para que o chamador (actions.js) possa tratá-lo adequadamente.
+        console.error('Erro na chamada da PokeAPI (getPokemons):', error);
+        throw error; 
     }
-
 }
 
-// manipulando os detalhes dos pokemons
-pokeApi.getPokemonsDetail = async (pokemon) => {
+// manipulando os detalhes de UM pokemon
+pokeApi.getPokemonsDetail = async (pokemon) => { // Mantido o nome 'getPokemonsDetail' para consistência com o seu código
     try {
         const response = await fetch(pokemon.url);
         const pokemonsDetails = await response.json();
         return convertPokeApiDetailToPokemon(pokemonsDetails);
     } catch (error) {
-        return console.error('Erro ao buscar detalhes do Pokémon:', error);
+        console.error('Erro ao buscar detalhes do Pokémon:', error);
+        throw error;
     }
 }
 
+// Busca um Pokémon específico por nome ou ID exato.
+pokeApi.getPokemonByNameOrId = async (idOrName) => {
+    const formattedIdOrName = String(idOrName).toLowerCase();
+    const url = `https://pokeapi.co/api/v2/pokemon/${formattedIdOrName}/`;
 
-// criando os pokemons
-function convertPokeApiDetailToPokemon(pokemonDetailApi){
-    const pokemon = new Pokemon()
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Pokémon "${idOrName}" não encontrado.`);
+        }
+        const pokeDetail = await response.json();
+        return convertPokeApiDetailToPokemon(pokeDetail);
+    } catch (error) {
+        console.error('Erro ao buscar Pokémon por nome/ID exato:', error);
+        throw error;
+    }
+};
 
-    pokemon.number = pokemonDetailApi.id;
-    pokemon.name = pokemonDetailApi.name;
+// *** ESTA É A FUNÇÃO QUE ESTAVA FALTANDO NO SEU api_pokemon.js! ***
+pokeApi.getAllPokemonBasicData = async () => {
+    // Usamos um limite alto para buscar a lista básica de todos os Pokémons (apenas nome e URL).
+    // Isso é útil para buscas futuras como "começa com".
+    const url = `https://pokeapi.co/api/v2/pokemon?offset=0&limit=10000`; 
 
-    pokemon.types = pokemonDetailApi.types.map(typeSlot => typeSlot.type.name);
-    pokemon.type = pokemon.types[0];
-    pokemon.photo = pokemonDetailApi.sprites.other.dream_world.front_default || pokemonDetailApi.sprites.front_default;
+    try {
+        const response = await fetch(url);
+        const jsonBody = await response.json();
+        return jsonBody.results; // Retorna um array de objetos {name: "nome", url: "url"}
+    } catch (error) {
+        console.error('Erro ao buscar lista básica de todos os Pokémons:', error);
+        throw error;
+    }
+};
 
-
-    return pokemon
-}
 
 export { pokeApi }
