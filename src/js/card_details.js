@@ -1,4 +1,5 @@
 import { pokeApi } from './api_pokemon.js';
+import { cardDetailsInitial } from './structure_initial.js';
 
 let currentPokemonData = null;
 let currentPokemonIndexInAllData = -1;
@@ -20,6 +21,8 @@ function setupCardDetailsEvents(displayPokemonDetailsCallback, allPokemonBasicDa
             // CORREÇÃO: Limpa o conteúdo da seção de detalhes ANTES de carregar.
             pokemonDetailsSection.innerHTML = ''; // Garante que não haja sobreposição
 
+            pokemonDetailsSection.innerHTML = cardDetailsInitial; 
+
             body.classList.remove("primary");
             body.classList.add("gray-scale");
             header.classList.add("hidden");
@@ -29,25 +32,23 @@ function setupCardDetailsEvents(displayPokemonDetailsCallback, allPokemonBasicDa
             let pokemonData;
             // Verifica o cache antes de ir na API
             if (pokemonDetailsCache[pokemonId]) {
+                
                 pokemonData = pokemonDetailsCache[pokemonId];
-                console.log(`Detalhes do Pokémon ${pokemonId} carregados do CACHE.`);
+                
             } else {
                 
-                console.log(`Buscando detalhes do Pokémon ${pokemonId} da API...`); // Onde você viu o log "undefined"
                 pokemonData = await pokeApi.getPokemonByNameOrId(pokemonId);
                 const pokemonDescription = await pokeApi.getPokemonDescription(pokemonId);
                 pokemonData.description = pokemonDescription;
                 pokemonDetailsCache[pokemonId] = pokemonData; // Armazena no cache
-                console.log(`Detalhes do Pokémon ${pokemonId} armazenados no CACHE.`);
+                
             }
 
             console.log('Detalhes do Pokémon:', pokemonData);
 
             // currentPokemonData é o objeto Pokémon COMPLETO (com 'number')
             currentPokemonData = pokemonData;
-            // allPokemonBasicDataGlobal é a lista BÁSICA (com 'url', 'name' mas sem 'number' direto)
-            // Precisamos encontrar o índice usando a URL ou o nome, se o número não estiver disponível na lista básica
-            // Ajustamos para usar o 'number' do pokemonData completo para encontrar na lista global
+            
             // pois a lista global é a referência para navegar.
             currentPokemonIndexInAllData = allPokemonBasicDataGlobal.findIndex(p => {
                 // Extrai o ID da URL do Pokémon básico na lista global para comparar com o número do Pokémon completo
@@ -128,7 +129,11 @@ function setupCardDetailsEvents(displayPokemonDetailsCallback, allPokemonBasicDa
         const clickedItem = event.target.closest('.pokemon-list');
         if (clickedItem) {
             const pokemonId = clickedItem.dataset.pokemonId;
-            await showPokemonDetails(pokemonId);
+            if (pokemonId) { // Garante que há um ID antes de tentar mostrar detalhes
+                await showPokemonDetails(pokemonId);
+            } else {
+                console.warn("Elemento clicado não possui data-pokemon-id.");
+            }
         }
     });
 }
