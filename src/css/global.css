@@ -32,6 +32,46 @@
 
     --box-shadow-inset: inset 0rem 0.0625rem 0.125rem var(--medium);
     --box-shadow: 0rem 0rem 0.1875rem 0.1875rem rgba(0, 0, 0, 0.139);
+
+
+    /* Cores principais (você já deve ter essas) */
+    --grass: #9bcc50;
+    --fire: #fd7d24;
+    --water: #4592c4;
+    --bug: #729f3f;
+    --normal: #a4acaf;
+    --poison: #b97fc9;
+    --electric: #eed535;
+    --ground: #f7de3f;
+    --fairy: #fdb9e9;
+    --fighting: #d56723;
+    --psychic: #f366b9;
+    --rock: #a38c21;
+    --ghost: #7b62a3;
+    --dragon: #53a4cf;
+    --ice: #51c4e7;
+    --steel: #9eb7b8;
+    --dark: #707070;
+
+    /* NOVAS CORES LIGHT (Ajuste o valor rgba para a transparência que desejar, 0.3 a 0.5 é bom para "leve") */
+    --grass-light: rgba(155, 204, 80, 0.4);
+    --fire-light: rgba(253, 125, 36, 0.4);
+    --water-light: rgba(69, 146, 196, 0.4);
+    --bug-light: rgba(114, 159, 63, 0.4);
+    --normal-light: rgba(164, 172, 175, 0.4);
+    --poison-light: rgba(185, 127, 201, 0.4);
+    --electric-light: rgba(238, 213, 53, 0.4);
+    --ground-light: rgba(247, 222, 63, 0.4);
+    --fairy-light: rgba(253, 185, 233, 0.4);
+    --fighting-light: rgba(213, 103, 35, 0.4);
+    --psychic-light: rgba(243, 102, 185, 0.4);
+    --rock-light: rgba(163, 140, 33, 0.4);
+    --ghost-light: rgba(123, 98, 163, 0.4);
+    --dragon-light: rgba(83, 164, 207, 0.4);
+    --ice-light: rgba(81, 196, 231, 0.4);
+    --steel-light: rgba(158, 183, 184, 0.4);
+    --dark-light: rgba(112, 112, 112, 0.4);
+
 }
 
 html {
