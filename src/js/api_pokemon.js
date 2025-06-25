@@ -15,7 +15,14 @@ function convertPokeApiDetailToPokemon(pokemonDetailApi){
     // *** ADICIONANDO NOVOS CAMPOS PARA DETALHES COMPLETOS ***
     pokemon.height = pokemonDetailApi.height; // Em decimetros
     pokemon.weight = pokemonDetailApi.weight; // Em hectogramas
-    pokemon.abilities = pokemonDetailApi.abilities.map(abilitySlot => abilitySlot.ability); // Array de objetos {name: "...", url: "..."}
+    
+    // Verificação defensiva para habilidades:
+    if (pokemonDetailApi.abilities && Array.isArray(pokemonDetailApi.abilities)) {
+        pokemon.abilities = pokemonDetailApi.abilities.map(abilitySlot => abilitySlot.ability); 
+    } else {
+        pokemon.abilities = []; // Garante que seja um array vazio se os dados estiverem faltando
+    }
+
     pokemon.stats = pokemonDetailApi.stats; // Array de objetos {base_stat: X, stat: {name: "..."}}
 
     return pokemon
@@ -81,12 +88,18 @@ pokeApi.getPokemonDescription = async (idOrName) => {
             throw new Error(`Descrição do Pokémon "${idOrName}" não encontrada.`);
         }
         const speciesData = await response.json();
+
+        // *** ADICIONE ESTE CONSOLE.LOG AQUI ***
+        console.log('RAW speciesData do Pokémon:', speciesData); 
+        // Inspecione o conteúdo de 'flavor_text_entries' neste objeto no console do navegador
+
         // A descrição está em 'flavor_text_entries'. Precisamos encontrar uma em português (ou inglês como fallback).
-        const descriptionEntry = speciesData.flavor_text_entries.find(entry => entry.language.name === 'pt'); // Mude 'en' para 'pt' se a API tiver.
+        const descriptionEntry = speciesData.flavor_text_entries.find(entry => entry.language.name === 'en'); 
+        
         return descriptionEntry ? descriptionEntry.flavor_text.replace(/[\n\f]/g, ' ') : 'Descrição não disponível.'; // Limpa quebras de linha
     } catch (error) {
         console.error('Erro ao buscar descrição do Pokémon:', error);
-        throw error;
+        throw error; // Re-lança o erro para que showPokemonDetails possa tratá-lo
     }
 };
 
@@ -107,6 +120,5 @@ pokeApi.getAllPokemonBasicData = async () => {
         throw error;
     }
 };
-
 
 export { pokeApi }
