@@ -60,7 +60,7 @@ main {
                         justify-content: center;
                         border-radius: 0.4375rem;
                         font-size: var(--body-3);
-                        color: var(--dark);
+                        color: var(--dark-color);
                         padding-bottom: 0.25rem;
                         text-transform: capitalize;
                         
@@ -280,7 +280,7 @@ main {
                             font-size: var(--body-3);
                             align-content: center;
                             font-weight: var(--font-weight-regular);
-                            color: var(--dark);
+                            color: var(--dark-color);
                         }
                     }
 
@@ -297,6 +297,7 @@ main {
                 }
 
                 div:nth-of-type(3) {
+                    
                     display: flex;
                     flex-direction: column;
                     justify-content: space-around;
@@ -304,18 +305,18 @@ main {
 
                 div:nth-of-type(3) > span:nth-of-type(1) {
                     height: 2rem;
-                    display: grid;
-                    grid-template-rows: 1fr 1fr;
                     text-align: center;
                     gap: 0.3125rem;
                     justify-content: space-evenly;
+                    align-items: center;
+                    padding-top: 0px;
 
                     span {
                         width: 100%;
-                        height: 0.625rem;
+                        height: 100%;
                         padding: 0;
                         text-transform: capitalize;
-                        text-align: left;
+                        text-align: center;
 
                     }
                 }
@@ -326,7 +327,7 @@ main {
             p {
                 font-size: var(--body-3);
                 font-weight: var(--font-weight-regular);
-                color: var(--dark);
+                color: var(--dark-color);
                 height: 3.75rem;
                 align-content: center;
                 letter-spacing: 0.0313rem;
@@ -356,7 +357,7 @@ main {
                     li {
                         font-size: var(--subtitle-3);
                         font-weight: var(--font-weight-regular);
-                        color: var(--dark);
+                        color: var(--dark-color);
                         text-align: right;
                         align-content: center;
                         height: 1rem;
@@ -567,7 +568,7 @@ main {
                             justify-content: center;
                             border-radius: 0.4375rem;
                             font-size: var(--body-3);
-                            color: var(--dark);
+                            color: var(--dark-color);
                             padding-bottom: inherit;
                             padding-top: 1.25rem;
                         }
@@ -777,7 +778,7 @@ main {
                                 font-size: var(--body-3);
                                 align-content: center;
                                 font-weight: var(--font-weight-regular);
-                                color: var(--dark);
+                                color: var(--dark-color);
                             }
                         }
 
@@ -793,23 +794,32 @@ main {
                         rotate: 90deg;
                     }
 
-                    div:nth-of-type(3) > span:nth-child(1) {
+                    div:nth-of-type(3){
                         
-                        display: grid;
-                        grid-template-rows: 1fr 1fr;
+                        width: 100%;
+                    }
+
+                    div:nth-of-type(3) > span:nth-child(1) {
+                        height: 2rem;
                         text-align: center;
                         gap: 0.3125rem;
                         justify-content: space-evenly;
+                        align-items: center;
+                        padding-top: 0px;
+
 
                         span {
                             width: 100%;
-                            height: 0.625rem;
+                            height: 100%;
                             padding: 0;
                             text-transform: capitalize;
                             text-align: left;
+                            
 
                         }
+                        
                     }
+
                 } 
 
 
@@ -817,7 +827,7 @@ main {
                 p {
                     font-size: var(--body-3);
                     font-weight: var(--font-weight-regular);
-                    color: var(--dark);
+                    color: var(--dark-color);
                     height: 3.75rem;
                     align-content: center;
                     text-align: center;
@@ -847,7 +857,7 @@ main {
                         li {
                             font-size: var(--subtitle-3);
                             font-weight: var(--font-weight-regular);
-                            color: var(--dark);
+                            color: var(--dark-color);
                             text-align: right;
                             align-content: center;
                             height: 1rem;

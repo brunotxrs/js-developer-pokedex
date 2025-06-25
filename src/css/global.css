@@ -11,7 +11,7 @@
     --font-family: "Roboto", sans-serif;
 
     --primary: #DC0A2D;
-    --dark: #212121;
+    --dark-color: #212121;
     --medium: #666666;
     --grayscale: #B8B8B8;
     --light: #E0E0E0;
@@ -39,7 +39,7 @@
     --fire: #fd7d24;
     --water: #4592c4;
     --bug: #729f3f;
-    --normal: #a4acaf;
+    --normal: #AAA67F;
     --poison: #b97fc9;
     --electric: #eed535;
     --ground: #f7de3f;
@@ -58,7 +58,7 @@
     --fire-light: rgba(253, 125, 36, 0.4);
     --water-light: rgba(69, 146, 196, 0.4);
     --bug-light: rgba(114, 159, 63, 0.4);
-    --normal-light: rgba(164, 172, 175, 0.4);
+    --normal-light: hsla(54, 20%, 58%, 0.4);
     --poison-light: rgba(185, 127, 201, 0.4);
     --electric-light: rgba(238, 213, 53, 0.4);
     --ground-light: rgba(247, 222, 63, 0.4);
