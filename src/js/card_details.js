@@ -1,96 +1,97 @@
 import { pokeApi } from './api_pokemon.js';
 
+let currentPokemonData = null;
+let currentPokemonIndexInAllData = -1;
+let allPokemonBasicDataGlobal = [];
+// Cache para armazenar os detalhes completos dos Pokémons já visitados
+const pokemonDetailsCache = {};
 
-let currentPokemonData = null; // Para armazenar os dados do Pokémon atualmente exibido no card
-let currentPokemonIndexInAllData = -1; // Para ajudar na navegação anterior/próximo
-let allPokemonBasicDataGlobal = []; // Para armazenar a lista completa de Pokémons para navegação
-
-
-// Esta função agora aceita `displayPokemonDetailsCallback` como um parâmetro.
-// Ela será responsável por BUSCAR os detalhes do Pokémon clicado e então chamará o callback
-// para renderizar o HTML dinamicamente.
-// Adicionado allPokemonBasicData como parâmetro para navegação
-function setupCardDetailsEvents(displayPokemonDetailsCallback, allPokemonBasicData) { 
-    
+function setupCardDetailsEvents(displayPokemonDetailsCallback, allPokemonBasicData) {
     const body = document.getElementById('body');
     const header = document.getElementById('header');
     const contentPokemon = document.getElementById('content-pokemon');
-    const pokemonDetailsSection = document.getElementById("pokemon-details"); 
-    const ol = document.getElementById("ol"); 
+    const pokemonDetailsSection = document.getElementById("pokemon-details");
+    const ol = document.getElementById("ol");
 
-    allPokemonBasicDataGlobal = allPokemonBasicData; // Armazena a lista de Pokémons globalmente
+    allPokemonBasicDataGlobal = allPokemonBasicData;
 
-    // Função interna para exibir os detalhes e configurar os listeners dinâmicos
     async function showPokemonDetails(pokemonId) {
         try {
-            // Esconde a lista e mostra a seção de detalhes
-            body.classList.remove("primary"); // Remove primary
-            body.classList.add("gray-scale"); // Adiciona gray-scale para o fundo da tela de detalhes
+            // CORREÇÃO: Limpa o conteúdo da seção de detalhes ANTES de carregar.
+            pokemonDetailsSection.innerHTML = ''; // Garante que não haja sobreposição
+
+            body.classList.remove("primary");
+            body.classList.add("gray-scale");
             header.classList.add("hidden");
             contentPokemon.classList.add("hidden");
-            pokemonDetailsSection.classList.remove('hidden'); // Mostra a seção de detalhes
+            pokemonDetailsSection.classList.remove('hidden');
 
-            // Busca os detalhes completos do Pokémon
-            const pokemonData = await pokeApi.getPokemonByNameOrId(pokemonId); 
+            let pokemonData;
+            // Verifica o cache antes de ir na API
+            if (pokemonDetailsCache[pokemonId]) {
+                pokemonData = pokemonDetailsCache[pokemonId];
+                console.log(`Detalhes do Pokémon ${pokemonId} carregados do CACHE.`);
+            } else {
+                
+                console.log(`Buscando detalhes do Pokémon ${pokemonId} da API...`); // Onde você viu o log "undefined"
+                pokemonData = await pokeApi.getPokemonByNameOrId(pokemonId);
+                const pokemonDescription = await pokeApi.getPokemonDescription(pokemonId);
+                pokemonData.description = pokemonDescription;
+                pokemonDetailsCache[pokemonId] = pokemonData; // Armazena no cache
+                console.log(`Detalhes do Pokémon ${pokemonId} armazenados no CACHE.`);
+            }
+
             console.log('Detalhes do Pokémon:', pokemonData);
 
-            const pokemonDescription = await pokeApi.getPokemonDescription(pokemonId); // <--- NOVA LINHA
-            pokemonData.description = pokemonDescription; // <--- NOVA LINHA
-
-            // Armazena o Pokémon atual para navegação futura
+            // currentPokemonData é o objeto Pokémon COMPLETO (com 'number')
             currentPokemonData = pokemonData;
-            // Encontra o índice do Pokémon atual na lista completa de dados básicos
-            currentPokemonIndexInAllData = allPokemonBasicDataGlobal.findIndex(p => p.number == pokemonData.number);
+            // allPokemonBasicDataGlobal é a lista BÁSICA (com 'url', 'name' mas sem 'number' direto)
+            // Precisamos encontrar o índice usando a URL ou o nome, se o número não estiver disponível na lista básica
+            // Ajustamos para usar o 'number' do pokemonData completo para encontrar na lista global
+            // pois a lista global é a referência para navegar.
+            currentPokemonIndexInAllData = allPokemonBasicDataGlobal.findIndex(p => {
+                // Extrai o ID da URL do Pokémon básico na lista global para comparar com o número do Pokémon completo
+                const basicPokemonIdFromUrl = p.url.split('/').filter(Boolean).pop();
+                return basicPokemonIdFromUrl == pokemonData.number;
+            });
 
 
-            // Chama a função de callback para PREENCHER o HTML do card de detalhes
             if (displayPokemonDetailsCallback) {
                 displayPokemonDetailsCallback(pokemonData);
             }
 
-            // APLICAR A COR DO TIPO PRINCIPAL AO BACKGROUND DA SEÇÃO DE DETALHES
-            // O ideal é que `pokemon-details` receba a classe do tipo
-            // e o CSS lide com a cor.
             pokemonDetailsSection.className = `pokemon-details ${pokemonData.type}`;
-            // Certifique-se que seu CSS tenha algo como: .pokemon-details.grass { background-color: var(--grass); }
-            // Ou que a cor seja aplicada diretamente no elemento com a classe content-details (já está no actions.js)
 
-
-            // ATENÇÃO: Adicionar event listeners para os botões dinâmicos AGORA.
-            // Eles só existem no DOM depois que displayPokemonDetailsCallback injeta o HTML.
-            const arrowBackDetail = document.getElementById('arrow-back'); 
+            const arrowBackDetail = document.getElementById('arrow-back');
             if (arrowBackDetail) {
-                // Usando onclick para sobrescrever eventuais listeners anteriores e evitar duplicação
-                arrowBackDetail.onclick = () => { 
+                arrowBackDetail.onclick = () => {
                     pokemonDetailsSection.innerHTML = '';
                     console.log("Clicado em voltar do detalhe.");
-                    body.classList.remove("gray-scale"); // Remove gray-scale
-                    body.classList.add("primary"); // Volta a cor primary
+                    body.classList.remove("gray-scale");
+                    body.classList.add("primary");
                     header.classList.remove("hidden");
                     contentPokemon.classList.remove("hidden");
-                    pokemonDetailsSection.classList.add('hidden'); // Esconde a seção de detalhes
-                    pokemonDetailsSection.className = `pokemon-details hidden`; // Limpa a classe de tipo
-                    currentPokemonData = null; // Resetar
-                    currentPokemonIndexInAllData = -1; // Resetar
+                    pokemonDetailsSection.classList.add('hidden');
+                    pokemonDetailsSection.className = `pokemon-details hidden`;
+                    currentPokemonData = null;
+                    currentPokemonIndexInAllData = -1;
                 };
             } else {
                 console.warn("Elemento #arrow-back-detail não encontrado após injeção do HTML.");
             }
 
-            // Lógica para chevrons (esquerda/direita)
             const chevronLeft = document.getElementById('chevron-left');
             const chevronRight = document.getElementById('chevron-right');
 
             if (chevronLeft) {
                 chevronLeft.onclick = async () => {
                     if (currentPokemonIndexInAllData > 0) {
-                        // Navega para o Pokémon anterior
                         const previousPokemonBasic = allPokemonBasicDataGlobal[currentPokemonIndexInAllData - 1];
-                        await showPokemonDetails(previousPokemonBasic.number); 
+                        // *** CORREÇÃO AQUI: Extrai o ID da URL ***
+                        const prevId = previousPokemonBasic.url.split('/').filter(Boolean).pop();
+                        await showPokemonDetails(prevId);
                     } else {
                         console.log("Já no primeiro Pokémon da lista.");
-                        // Opcional: Voltar para o último da lista se quiser um loop
-                        // await showPokemonDetails(allPokemonBasicDataGlobal[allPokemonBasicDataGlobal.length - 1].number);
                     }
                 };
             }
@@ -98,47 +99,38 @@ function setupCardDetailsEvents(displayPokemonDetailsCallback, allPokemonBasicDa
             if (chevronRight) {
                 chevronRight.onclick = async () => {
                     if (currentPokemonIndexInAllData < allPokemonBasicDataGlobal.length - 1) {
-                        // Navega para o próximo Pokémon
                         const nextPokemonBasic = allPokemonBasicDataGlobal[currentPokemonIndexInAllData + 1];
-                        await showPokemonDetails(nextPokemonBasic.number); 
+                        // *** CORREÇÃO AQUI: Extrai o ID da URL ***
+                        const nextId = nextPokemonBasic.url.split('/').filter(Boolean).pop();
+                        await showPokemonDetails(nextId);
                     } else {
                         console.log("Já no último Pokémon da lista.");
-                        // Opcional: Voltar para o primeiro da lista se quiser um loop
-                        // await showPokemonDetails(allPokemonBasicDataGlobal[0].number);
                     }
                 };
             }
 
         } catch (error) {
-            console.error(`Erro ao carregar detalhes do Pokémon ${pokemonId}:`, error);
-            // Garante que a seção esteja visível para mostrar o erro, mas restaura o estado anterior se falhar
-            pokemonDetailsSection.classList.remove('hidden'); 
-            const detailsContent = document.getElementById("pokemon-details-content");
-            if (detailsContent) {
-                detailsContent.innerHTML = `<div class="error-message">Ocorreu um erro ao carregar os detalhes do Pokémon ${pokemonId}.<br>${error.message}</div>`;
-            }
-            // Reverta a visibilidade e classes se a abertura falhar completamente
-            body.classList.remove("gray-scale");
-            body.classList.add("primary");
-            header.classList.remove("hidden");
-            contentPokemon.classList.remove("hidden");
-            pokemonDetailsSection.classList.add('hidden'); // Esconde a seção de detalhes novamente
-            pokemonDetailsSection.className = `pokemon-details hidden`; // Limpa a classe de tipo
+            console.error(`Erro ao carregar os detalhes do Pokémon ${pokemonId}:`, error);
+            const displayId = pokemonId !== undefined && pokemonId !== null ? pokemonId : 'indefinido';
+            pokemonDetailsSection.innerHTML = `<div class="error-message">Ocorreu um erro ao carregar os detalhes do Pokémon ${displayId}.<br>${error.message}</div>`;
+            pokemonDetailsSection.classList.remove('hidden');
+
+            body.classList.remove("primary");
+            body.classList.add("gray-scale");
+            header.classList.add("hidden");
+            contentPokemon.classList.add("hidden");
+
+            pokemonDetailsSection.className = `pokemon-details gray-scale-error`;
         }
     }
 
-
-    // Listener principal para o clique nos itens da lista OL
-    ol.addEventListener('click', async (event) => { 
-        const clickedItem = event.target.closest('.pokemon-list'); 
+    ol.addEventListener('click', async (event) => {
+        const clickedItem = event.target.closest('.pokemon-list');
         if (clickedItem) {
             const pokemonId = clickedItem.dataset.pokemonId;
-            await showPokemonDetails(pokemonId); // Chama a função que faz tudo
-            
+            await showPokemonDetails(pokemonId);
         }
     });
-
-    // Removido o event listener fixo para 'arrowBack' pois ele é agora adicionado dinamicamente
 }
 
 export { setupCardDetailsEvents };
