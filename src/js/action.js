@@ -10,7 +10,7 @@ const htmlToSpinner = `
                 <span>Pokémon Name</span>
             </li>
         `;
-const pokemonLimit = 10;
+const pokemonLimit = 20;
 
 // Variável para armazenar a lista completa de Pokémons (nome e URL básica)
 let allPokemonBasicData = [];
@@ -91,10 +91,26 @@ function loadAndRenderPokemons(pokemonsToDisplayPromise) {
 
 // Função para construir o HTML dos detalhes do Pokémon (chamada por card_details.js)
 // Esta função é o 'displayPokemonDetailsCallback' passado para setupCardDetailsEvents
+
 async function displayPokemonDetails(pokemon) {
     const pokemonDetailsSection = document.getElementById("pokemon-details"); 
     const typesHtml = pokemon.types.map(type => `<span class="${type}">${type}</span>`).join('');
-    
+
+    // console.log("Descrição do Pokémon recebida:", pokemon.description);
+    console.log("Descrição do Pokémon recebida DENTRO DA FUNÇÃO (action.js):", pokemon.description);
+
+    let abilitiesHtml = '<span> Ability 1 Ability 2</span>'; // Valor padrão para caso não haja habilidades
+
+     if (pokemon.abilities && Array.isArray(pokemon.abilities) && pokemon.abilities.length > 0) {
+        abilitiesHtml = pokemon.abilities.map(ability => { // <-- Mudei o nome do parâmetro para 'ability'
+            // AGORA SIM: Acessamos diretamente 'ability.name'
+            if (ability && ability.name) { 
+                return `<span>${ability.name.replace('-', ' ')}</span>`; // <-- Corrigido para 'ability.name'
+            }
+            return ''; // Retorna uma string vazia para entradas de habilidades malformadas
+        }).join(' '); // Junta todas as strings <span> com um espaço
+    }
+
     if (!pokemon || !pokemon.name) {
 
         return pokemonDetailsSection.innerHTML +=   `<div class="content-details">
@@ -153,7 +169,7 @@ async function displayPokemonDetails(pokemon) {
 
                     <div>
                         <span>
-                            <span>Ability 1 Ability 2</span>
+                            <span></span>
                         </span>
 
                         <span>Moves</span>
@@ -214,7 +230,7 @@ async function displayPokemonDetails(pokemon) {
                     <span>
                         <h1>${pokemon.name}</h1>
                     </span>
-                    <span>##${pokemon.number}</span>
+                    <span>#${pokemon.number}</span>
                 </div>
 
                 <div class="box-second-details">
@@ -243,7 +259,7 @@ async function displayPokemonDetails(pokemon) {
                     <div>
                         <span>
                             <img src="./src/assets/ico/weight.svg" alt="weight">
-                            <span>${pokemon.weight} kg</span>
+                            <span>${pokemon.weight / 10} kg</span>
                         </span>
 
                         <span>Weight</span>
@@ -252,7 +268,7 @@ async function displayPokemonDetails(pokemon) {
                     <div>
                         <span>
                             <img src="./src/assets/ico/straighten.svg" alt="straighten">
-                            <span>${pokemon.height} m</span>
+                            <span>${pokemon.height / 10} m</span>
                         </span>
 
                         <span>Height</span>
@@ -260,7 +276,7 @@ async function displayPokemonDetails(pokemon) {
 
                     <div>
                         <span>
-                            <span>Ability 1 Ability 2</span>
+                            ${abilitiesHtml}
                         </span>
 
                         <span>Moves</span>
@@ -269,10 +285,10 @@ async function displayPokemonDetails(pokemon) {
                 </div>
 
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc iaculis eros vitae tellus condimentum maximus sit amet in eros.
+                    ${pokemon.description || ''}
                 </p>
 
-                <div class="about gray-scale"><span>Base Stats</span></div>
+                <div class="about ${pokemon.type}"><span>Base Stats</span></div>
 
                 <div class="frame">
                     <ol>
@@ -287,23 +303,40 @@ async function displayPokemonDetails(pokemon) {
                     <span></span>
 
                     <ol>
-                        <li>999</li>
-                        <li>999</li>
-                        <li>999</li>
-                        <li>999</li>
-                        <li>999</li>
-                        <li>999</li>
+                        ${pokemon.stats.map(stat => {
+                            // Mapeia o nome da estatística para o nome curto no HTML
+                            let statName;
+                            switch(stat.stat.name) {
+                                case 'hp': statName = 'HP'; break;
+                                case 'attack': statName = 'ATK'; break;
+                                case 'defense': statName = 'DEF'; break;
+                                case 'special-attack': statName = 'SATK'; break;
+                                case 'special-defense': statName = 'SDEF'; break;
+                                case 'speed': statName = 'SPD'; break;
+                                default: statName = stat.stat.name; // Fallback para outros nomes, se houver
+                            }
+                            return `<li>0${stat.base_stat}</li>`; // Exibe o valor base
+                        }).join('')}
                     </ol>
 
                     <ol>
-                        <li><input type="range" id="hpSlider" min="0" max="100" step="0.01" value="50"></li>
-                        <li><input type="range" id="atkSlider" min="0" max="100" step="0.01" value="50"></li>
-                        <li><input type="range" id="defSlider" min="0" max="100" step="0.01" value="50"></li>
-                        <li><input type="range" id="satkSlider" min="0" max="100" step="0.01" value="50"></li>
-                        <li><input type="range" id="sdefSlider" min="0" max="100" step="0.01" value="50"></li>
-                        <li><input type="range" id="spdSlider" min="0" max="100" step="0.01" value="50"></li>
-                    </ol>
+                        ${pokemon.stats.map(stat => {
+                            // Calcula a porcentagem de preenchimento da barra
+                            // O valor máximo de um stat base é 255.
+                            // Convertemos para uma escala de 0 a 100 para o CSS.
+                            const fillPercentage = (stat.base_stat / 255) * 100; // Porcentagem de preenchimento
+                            const statId = stat.stat.name.replace(/-/g, ''); // hp, atk, def, satk, sdef, spd
 
+                            return `<li><input type="range"
+                                    id="${statId}Slider"
+                                    min="0"
+                                    max="255"
+                                    step="1"
+                                    value="${stat.base_stat}"
+                                    disabled
+                                    style="--stat-fill-percentage: ${fillPercentage}%; --stat-type-color: var(--${pokemon.type}); --stat-type-color-light: var(--${pokemon.type}-light);"></li>`; // <-- LINHA ALTERADA: Removido 'background' e adicionado '--stat-type-color-light'
+                        }).join('')}
+                    </ol>
                 </div>
 
             </div>
