@@ -17,7 +17,6 @@ function setupSearchTypeSelection(onSearchTypeChangeCallback) {
         radio.addEventListener('change', (event) => {
             boxSelectRadio.classList.add('hidden');
             const selectedSearchType = event.target.value;
-            console.log("Tipo de busca selecionado (dentro de search_type.js):", selectedSearchType);
 
             if (onSearchTypeChangeCallback && typeof onSearchTypeChangeCallback === 'function') {
                 onSearchTypeChangeCallback(selectedSearchType);

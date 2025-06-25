@@ -89,10 +89,6 @@ pokeApi.getPokemonDescription = async (idOrName) => {
         }
         const speciesData = await response.json();
 
-        // *** ADICIONE ESTE CONSOLE.LOG AQUI ***
-        console.log('RAW speciesData do Pokémon:', speciesData); 
-        // Inspecione o conteúdo de 'flavor_text_entries' neste objeto no console do navegador
-
         // A descrição está em 'flavor_text_entries'. Precisamos encontrar uma em português (ou inglês como fallback).
         const descriptionEntry = speciesData.flavor_text_entries.find(entry => entry.language.name === 'en'); 
         
@@ -107,7 +103,7 @@ pokeApi.getPokemonDescription = async (idOrName) => {
 
 // *** ESTA É A FUNÇÃO QUE ESTAVA FALTANDO NO SEU api_pokemon.js! ***
 pokeApi.getAllPokemonBasicData = async () => {
-    // Usamos um limite alto para buscar a lista básica de todos os Pokémons (apenas nome e URL).
+    // Usei um limite alto para buscar a lista básica de todos os Pokémons (apenas nome e URL).
     // Isso é útil para buscas futuras como "começa com".
     const url = `https://pokeapi.co/api/v2/pokemon?offset=0&limit=10000`; 
 
