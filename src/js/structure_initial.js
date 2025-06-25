@@ -11,33 +11,32 @@ const cardDetailsInitial = `<div class="content-details">
     <div class="box-one-details">
         <span id="arrow-back">
             <img src="https://img.icons8.com/?size=100&id=357&format=png&color=ffffff" alt="ico arrow back">
-    
         </span>
         <span>
-            <h1>Pokémon Name</h1>
+            <h1 id="pokemon-name-detail">Pokémon Name</h1>
         </span>
-        <span>#999</span>
+        <span id="pokemon-number-detail">#999</span>
     </div>
 
     <div class="box-second-details">
-        <span><img src="https://img.icons8.com/?size=100&id=w4iYfd3Qeyn6&format=png&color=ffffff" alt="ico chevron left"></span>
-        <span><img src="https://img.icons8.com/?size=100&id=dK72mTJ1Cf8b&format=png&color=ffffff" alt="ico chevron right"></span>
+        <span id="chevron-left"><img src="https://img.icons8.com/?size=100&id=w4iYfd3Qeyn6&format=png&color=ffffff" alt="ico chevron left"></span>
+        <span id="chevron-right"><img src="https://img.icons8.com/?size=100&id=dK72mTJ1Cf8b&format=png&color=ffffff" alt="ico chevron right"></span>
     </div>
 
     <div class="box-third-details">
-        <img src="./src/assets/img/Silhouette.png" alt="image Silhouette">
+        <img id="pokemon-photo-detail" src="./src/assets/img/Silhouette.png" alt="image Silhouette">
     </div>
     
 </div>
 
 <div class="details">
 
-    <div class="type">
+    <div class="type" id="pokemon-types-container">
         <span>Type</span>
         <span>Type</span>
     </div>
     
-    <div class="about gray-scale">
+    <div class="about" id="about-section">
         <span>About</span>
     </div>
 
@@ -45,7 +44,7 @@ const cardDetailsInitial = `<div class="content-details">
         <div>
             <span>
                 <img src="./src/assets/ico/weight.svg" alt="weight">
-                <span>9,9 kg</span>
+                <span id="pokemon-weight-detail">9,9 kg</span>
             </span>
 
             <span>Weight</span>
@@ -54,7 +53,7 @@ const cardDetailsInitial = `<div class="content-details">
         <div>
             <span>
                 <img src="./src/assets/ico/straighten.svg" alt="straighten">
-                <span>9,9 m</span>
+                <span id="pokemon-height-detail">9,9 m</span>
             </span>
 
             <span>Height</span>
@@ -62,7 +61,7 @@ const cardDetailsInitial = `<div class="content-details">
 
         <div>
             <span>
-                <span></span>
+                <span id="pokemon-abilities-container"></span>
             </span>
 
             <span>Moves</span>
@@ -70,14 +69,14 @@ const cardDetailsInitial = `<div class="content-details">
 
     </div>
 
-    <p>
+    <p id="pokemon-description-detail">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc iaculis eros vitae tellus condimentum maximus sit amet in eros.
     </p>
 
-    <div class="about gray-scale"><span>Base Stats</span></div>
+    <div class="about" id="base-stats-section"><span>Base Stats</span></div>
 
     <div class="frame">
-        <ol>
+        <ol id="stats-names-ol">
             <li>HP</li>
             <li>ATK</li>
             <li>DEF</li>
@@ -88,7 +87,7 @@ const cardDetailsInitial = `<div class="content-details">
 
         <span></span>
 
-        <ol>
+        <ol id="stats-values-ol">
             <li>999</li>
             <li>999</li>
             <li>999</li>
@@ -97,7 +96,7 @@ const cardDetailsInitial = `<div class="content-details">
             <li>999</li>
         </ol>
 
-        <ol>
+        <ol id="stats-sliders-ol">
             <li><input type="range" id="hpSlider" min="0" max="100" step="0.01" value="50"></li>
             <li><input type="range" id="atkSlider" min="0" max="100" step="0.01" value="50"></li>
             <li><input type="range" id="defSlider" min="0" max="100" step="0.01" value="50"></li>
@@ -109,7 +108,7 @@ const cardDetailsInitial = `<div class="content-details">
     </div>
 
 </div>
-`
+`;
 
 function PokemonToLi(pokemon) {
     if (!pokemon || !pokemon.name) {
