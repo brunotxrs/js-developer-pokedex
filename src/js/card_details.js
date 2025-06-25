@@ -5,6 +5,7 @@ let currentPokemonData = null; // Para armazenar os dados do Pokémon atualmente
 let currentPokemonIndexInAllData = -1; // Para ajudar na navegação anterior/próximo
 let allPokemonBasicDataGlobal = []; // Para armazenar a lista completa de Pokémons para navegação
 
+
 // Esta função agora aceita `displayPokemonDetailsCallback` como um parâmetro.
 // Ela será responsável por BUSCAR os detalhes do Pokémon clicado e então chamará o callback
 // para renderizar o HTML dinamicamente.
@@ -32,6 +33,9 @@ function setupCardDetailsEvents(displayPokemonDetailsCallback, allPokemonBasicDa
             // Busca os detalhes completos do Pokémon
             const pokemonData = await pokeApi.getPokemonByNameOrId(pokemonId); 
             console.log('Detalhes do Pokémon:', pokemonData);
+
+            const pokemonDescription = await pokeApi.getPokemonDescription(pokemonId); // <--- NOVA LINHA
+            pokemonData.description = pokemonDescription; // <--- NOVA LINHA
 
             // Armazena o Pokémon atual para navegação futura
             currentPokemonData = pokemonData;
