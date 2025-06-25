@@ -1,9 +1,9 @@
 import { setupSearchTypeSelection } from './search_type.js';
 import { setupCardDetailsEvents } from './card_details.js';
 import { pokeApi } from './api_pokemon.js';
-import { Pokemon } from './pokemon_model.js'; // Importar Pokemon model para uso na função de detalhes
+import { Pokemon } from './pokemon_model.js';
 
-import { itemListInitial, PokemonToLi, cardDetailsInitial } from './structure_initial.js'
+import { itemListInitial, PokemonToLi } from './structure_initial.js'
 
 
 const htmlToSpinner = itemListInitial;
@@ -12,16 +12,13 @@ const pokemonLimit = 20;
 // Variável para armazenar a lista completa de Pokémons (nome e URL básica)
 let allPokemonBasicData = [];
 
-// 1. Função UNIFICADA para gerar o HTML de um Pokémon (REAL ou Placeholder)
-PokemonToLi()
 
-// 2. Função para RENDERIZAR APENAS OS POKÉMONS PADRÃO (SILHUETAS)
+// Função para RENDERIZAR APENAS OS POKÉMONS PADRÃO (SILHUETAS)
 function renderPlaceholderPokemons(limit = pokemonLimit) {
     const ol = document.getElementById("ol");
     let generatedHtml = '';
 
     ol.innerHTML = '';
-    console.log(`Exibindo ${limit} Pokémons padrão (silhuetas).`);
 
     for (let i = 0; i < limit; i++) {
         generatedHtml += PokemonToLi();
@@ -29,281 +26,297 @@ function renderPlaceholderPokemons(limit = pokemonLimit) {
     ol.innerHTML = generatedHtml;
 }
 
-// 3. Função para CARREGAR E RENDERIZAR POKÉMONS REAIS DA API (lista ou específico)
-// AGORA ELA RECEBE UMA PROMISE DIRETAMENTE para ser mais flexível.
-function loadAndRenderPokemons(pokemonsToDisplayPromise) {
+// Função para CARREGAR E RENDERIZAR POKÉMONS REAIS DA API (lista ou específico)
+async function loadAndRenderPokemons(pokemonPromise) {
     const ol = document.getElementById("ol");
-    // const loadingSpinner = document.getElementById("loading-spinner"); // Removido, pois não é usado de fato para mostrar/esconder
+    ol.innerHTML = htmlToSpinner; // Mostra spinner/placeholder enquanto carrega
 
-    ol.innerHTML = ''; // Limpa antes de carregar
-    ol.innerHTML = htmlToSpinner; // Mostra o spinner/placeholder enquanto carrega
+    try {
+        let pokemonsToRender;
+        const result = await pokemonPromise; // Resolve a Promise
+        
+        if (Array.isArray(result)) { // Se for uma lista de Pokémons (ex: getPokemons)
+            pokemonsToRender = result;
+        } else if (result instanceof Pokemon) { // Se for um único Pokémon (ex: getPokemonByNameOrId)
+            pokemonsToRender = [result];
+        } else {
+            // Se o resultado for nulo ou vazio e a busca exata não encontrou, renderiza placeholders
+            console.warn("Nenhum Pokémon encontrado ou resultado inesperado. Exibindo placeholders.");
+            renderPlaceholderPokemons();
+            return;
+        }
 
-    console.log('Iniciando carregamento e renderização de Pokémons...');
+        let generatedHtml = '';
+        if (pokemonsToRender && pokemonsToRender.length > 0) {
+            pokemonsToRender.forEach(pokemon => {
+                generatedHtml += PokemonToLi(pokemon); // Usa a função de structure_initial
+            });
+        } else {
+            console.log("Nenhum Pokémon para renderizar. Exibindo placeholders.");
+            generatedHtml = ''; // Limpa se não há Pokémons
+            renderPlaceholderPokemons(); // Ou exibe placeholders novamente
+            return;
+        }
+        ol.innerHTML = generatedHtml;
 
-    pokemonsToDisplayPromise
-        .then(result => {
-            setTimeout(() => { // Adicionado um pequeno delay para a UX do spinner
-                const pokemonArray = Array.isArray(result) ? result : [result];
-                let generatedHtmlContent = '';
-
-                if (pokemonArray && pokemonArray.length > 0 && pokemonArray[0] instanceof Pokemon) { // Verifica se é instância de Pokemon
-                    pokemonArray.forEach(pokemon => {
-                        generatedHtmlContent += PokemonToLi(pokemon);
-                    });
-                    ol.innerHTML = generatedHtmlContent;
-                    console.log(`Exibindo ${pokemonArray.length} Pokémon(s) real(is) da API.`);
-                } else {
-                    console.warn("Nenhum Pokémon encontrado ou dados inválidos para exibir.");
-                    ol.innerHTML = '<li>Nenhum Pokémon encontrado.</li>';
-                }
-            }, 500);
-        })
-        .catch(error => {
-            setTimeout(() => { // Adicionado um pequeno delay
-                console.error('Erro ao exibir Pokémons:', error);
-                ol.innerHTML = `<li>${error.message || 'Ocorreu um erro ao carregar os Pokémons.'}</li>`;
-            }, 500);
-        });
+    } catch (error) {
+        console.error("Erro ao carregar ou renderizar Pokémons:", error);
+        ol.innerHTML = `<li class="error-message">Erro ao carregar Pokémons. Tente novamente mais tarde.<br>${error.message}</li>`;
+        renderPlaceholderPokemons(); // Em caso de erro, volte para os placeholders
+    }
 }
 
-// Função para construir o HTML dos detalhes do Pokémon (chamada por card_details.js)
-// Esta função é o 'displayPokemonDetailsCallback' passado para setupCardDetailsEvents
+// Variável para controlar o tipo de busca selecionado (para controle de validação)
+let currentSearchType = null; 
 
+// A função displayPokemonDetails é usada como callback para card_details.js
+// Ela agora APENAS PREENCHE os elementos, não constrói o HTML do card.
 async function displayPokemonDetails(pokemon) {
     const pokemonDetailsSection = document.getElementById("pokemon-details"); 
-    const typesHtml = pokemon.types.map(type => `<span class="${type}">${type}</span>`).join('');
 
-    // console.log("Descrição do Pokémon recebida:", pokemon.description);
-    console.log("Descrição do Pokémon recebida DENTRO DA FUNÇÃO (action.js):", pokemon.description);
+    // Seleciona os elementos pelos IDs que estão no structure_initial.js (cardDetailsInitial)
+    const pokemonNameElement = pokemonDetailsSection.querySelector('#pokemon-name-detail');
+    const pokemonNumberElement = pokemonDetailsSection.querySelector('#pokemon-number-detail');
+    const pokemonPhotoElement = pokemonDetailsSection.querySelector('#pokemon-photo-detail');
+    const typesContainer = pokemonDetailsSection.querySelector('#pokemon-types-container'); 
+    const weightElement = pokemonDetailsSection.querySelector('#pokemon-weight-detail');
+    const heightElement = pokemonDetailsSection.querySelector('#pokemon-height-detail');
+    const abilitiesContainer = pokemonDetailsSection.querySelector('#pokemon-abilities-container'); 
+    const descriptionElement = pokemonDetailsSection.querySelector('#pokemon-description-detail');
+    const aboutSection = pokemonDetailsSection.querySelector('#about-section');
+    const baseStatsSection = pokemonDetailsSection.querySelector('#base-stats-section'); 
+    const statsNamesOl = pokemonDetailsSection.querySelector('#stats-names-ol');
+    const statsValuesOl = pokemonDetailsSection.querySelector('#stats-values-ol');
+    const statsSlidersOl = pokemonDetailsSection.querySelector('#stats-sliders-ol');
 
-    let abilitiesHtml = '<span> Ability 1 Ability 2</span>'; // Valor padrão para caso não haja habilidades
 
-     if (pokemon.abilities && Array.isArray(pokemon.abilities) && pokemon.abilities.length > 0) {
-        abilitiesHtml = pokemon.abilities.map(ability => { // <-- Mudei o nome do parâmetro para 'ability'
-            // AGORA SIM: Acessamos diretamente 'ability.name'
-            if (ability && ability.name) { 
-                return `<span>${ability.name.replace('-', ' ')}</span>`; // <-- Corrigido para 'ability.name'
-            }
-            return ''; // Retorna uma string vazia para entradas de habilidades malformadas
-        }).join(' '); // Junta todas as strings <span> com um espaço
+    // 1. Preencher Nome e Número
+    if (pokemonNameElement) {
+        pokemonNameElement.textContent = pokemon.name || 'Nome não disponível';
+    }
+    if (pokemonNumberElement) {
+        pokemonNumberElement.textContent = `#${String(pokemon.number).padStart(3, '0')}` || '#???';
     }
 
-    // aqui é pra trazer juntos com os dados da api passado pela class 
-    return pokemonDetailsSection.innerHTML += `<div class="content-details">
-                
-                <div class="box-one-details">
-                    <span id="arrow-back">
-                        <img src="https://img.icons8.com/?size=100&id=357&format=png&color=ffffff" alt="ico arrow back">
-                
-                    </span>
-                    <span>
-                        <h1>${pokemon.name}</h1>
-                    </span>
-                    <span>#${pokemon.number}</span>
-                </div>
+    // 2. Preencher Imagem
+    if (pokemonPhotoElement) {
+        pokemonPhotoElement.src = pokemon.photo || './src/assets/img/Silhouette.png';
+        pokemonPhotoElement.alt = pokemon.name || 'Pokémon Image';
+    }
+    
+    // 3. Preencher Tipos e cores do card
+    if (typesContainer) {
+        const typesHtml = pokemon.types.map(type => `<span class="${type}">${type}</span>`).join('');
+        typesContainer.innerHTML = typesHtml;
+        // Ajusta a classe principal do card com base no tipo
+        pokemonDetailsSection.className = `pokemon-details ${pokemon.type}`;
+        // E também a cor das seções "About" e "Base Stats"
+        if (aboutSection) aboutSection.className = `about ${pokemon.type}`;
+        if (baseStatsSection) baseStatsSection.className = `about ${pokemon.type}`;
+    }
 
-                <div class="box-second-details">
-                    <span id="chevron-left"><img src="https://img.icons8.com/?size=100&id=w4iYfd3Qeyn6&format=png&color=ffffff" alt="ico chevron left"></span>
-                    <span id="chevron-right"><img src="https://img.icons8.com/?size=100&id=dK72mTJ1Cf8b&format=png&color=ffffff" alt="ico chevron right"></span>
-                </div>
+    // 4. Preencher Peso e Altura
+    if (weightElement) {
+        weightElement.textContent = pokemon.weight ? `${(pokemon.weight / 10).toFixed(1)} kg` : 'N/A';
+    }
+    if (heightElement) {
+        heightElement.textContent = pokemon.height ? `${(pokemon.height / 10).toFixed(1)} m` : 'N/A';
+    }
 
-                <div class="box-third-details">
-                    <img src="${pokemon.photo}" alt="#${pokemon.name}">
-                </div>
-                
-            </div>
+    // 5. Preencher Habilidades/Moves
+    if (abilitiesContainer) {
+        let abilitiesHtml = '<span>Não disponível</span>'; 
+        if (pokemon.abilities && Array.isArray(pokemon.abilities) && pokemon.abilities.length > 0) {
+            abilitiesHtml = pokemon.abilities
+                .map(ability => {
+                    if (ability && ability.name) {
+                        return `<span>${ability.name.replace('-', ' ')}</span>`;
+                    }
+                    return '';
+                })
+                .filter(Boolean) // Remove strings vazias
+                .join(' '); 
+        }
+        abilitiesContainer.innerHTML = abilitiesHtml;
+    }
 
-            <div class="details">
+    // 6. Preencher Descrição
+    if (descriptionElement) {
+        descriptionElement.textContent = pokemon.description || 'Descrição não disponível.';
+    }
 
-                <div class="type">
-                    ${typesHtml}
-                    
-                </div>
-                
-                <div class="about ${pokemon.type}">
-                    <span>About</span>
-                </div>
+    // 7. Preencher Stats
+    if (statsNamesOl && statsValuesOl && statsSlidersOl && pokemon.stats && Array.isArray(pokemon.stats)) {
+        let namesHtml = '';
+        let valuesHtml = '';
+        let slidersHtml = '';
 
-                <div class="ability">
-                    <div>
-                        <span>
-                            <img src="./src/assets/ico/weight.svg" alt="weight">
-                            <span>${pokemon.weight / 10} kg</span>
-                        </span>
+        pokemon.stats.forEach(stat => {
+            let statNameDisplay;
+            switch(stat.stat.name) {
+                case 'hp': statNameDisplay = 'HP'; break;
+                case 'attack': statNameDisplay = 'ATK'; break;
+                case 'defense': statNameDisplay = 'DEF'; break;
+                case 'special-attack': statNameDisplay = 'SATK'; break;
+                case 'special-defense': statNameDisplay = 'SDEF'; break;
+                case 'speed': statNameDisplay = 'SPD'; break;
+                default: statNameDisplay = stat.stat.name;
+            }
+            namesHtml += `<li>${statNameDisplay}</li>`;
+            valuesHtml += `<li>${String(stat.base_stat).padStart(3, '0')}</li>`; // Formata com 3 dígitos
 
-                        <span>Weight</span>
-                    </div>
+            const statId = stat.stat.name.replace(/-/g, ''); 
+            const fillPercentage = (stat.base_stat / 255) * 100;
 
-                    <div>
-                        <span>
-                            <img src="./src/assets/ico/straighten.svg" alt="straighten">
-                            <span>${pokemon.height / 10} m</span>
-                        </span>
-
-                        <span>Height</span>
-                    </div>
-
-                    <div>
-                        <span>
-                            ${abilitiesHtml}
-                        </span>
-
-                        <span>Moves</span>
-                    </div>
-
-                </div>
-
-                <p>
-                    ${pokemon.description || ''}
-                </p>
-
-                <div class="about ${pokemon.type}"><span>Base Stats</span></div>
-
-                <div class="frame">
-                    <ol>
-                        <li>HP</li>
-                        <li>ATK</li>
-                        <li>DEF</li>
-                        <li>SATK</li>
-                        <li>SDEF</li>
-                        <li>SPD</li>
-                    </ol>
-
-                    <span></span>
-
-                    <ol>
-                        ${pokemon.stats.map(stat => {
-                            // Mapeia o nome da estatística para o nome curto no HTML
-                            let statName;
-                            switch(stat.stat.name) {
-                                case 'hp': statName = 'HP'; break;
-                                case 'attack': statName = 'ATK'; break;
-                                case 'defense': statName = 'DEF'; break;
-                                case 'special-attack': statName = 'SATK'; break;
-                                case 'special-defense': statName = 'SDEF'; break;
-                                case 'speed': statName = 'SPD'; break;
-                                default: statName = stat.stat.name; // Fallback para outros nomes, se houver
-                            }
-                            return `<li>0${stat.base_stat}</li>`; // Exibe o valor base
-                        }).join('')}
-                    </ol>
-
-                    <ol>
-                        ${pokemon.stats.map(stat => {
-                            // Calcula a porcentagem de preenchimento da barra
-                            // O valor máximo de um stat base é 255.
-                            // Convertemos para uma escala de 0 a 100 para o CSS.
-                            const fillPercentage = (stat.base_stat / 255) * 100; // Porcentagem de preenchimento
-                            const statId = stat.stat.name.replace(/-/g, ''); // hp, atk, def, satk, sdef, spd
-
-                            return `<li><input type="range"
-                                    id="${statId}Slider"
-                                    min="0"
-                                    max="255"
-                                    step="1"
-                                    value="${stat.base_stat}"
-                                    disabled
-                                    style="--stat-fill-percentage: ${fillPercentage}%; --stat-type-color: var(--${pokemon.type}); --stat-type-color-light: var(--${pokemon.type}-light);"></li>`; // <-- LINHA ALTERADA: Removido 'background' e adicionado '--stat-type-color-light'
-                        }).join('')}
-                    </ol>
-                </div>
-
-            </div>
-            `
-
+            slidersHtml += `<li><input type="range"
+                                id="${statId}Slider"
+                                min="0"
+                                max="255"
+                                step="1"
+                                value="${stat.base_stat}"
+                                disabled
+                                style="--stat-fill-percentage: ${fillPercentage}%; --stat-type-color: var(--${pokemon.type}); --stat-type-color-light: var(--${pokemon.type}-light);"></li>`;
+        });
+        
+        statsNamesOl.innerHTML = namesHtml;
+        statsValuesOl.innerHTML = valuesHtml;
+        statsSlidersOl.innerHTML = slidersHtml;
+    }
 }
 
 
-// ***** INICIALIZAÇÃO DA APLICAÇÃO QUANDO O DOM ESTÁ PRONTO *****
-document.addEventListener('DOMContentLoaded', () => {
+// Funções de inicialização
+document.addEventListener('DOMContentLoaded', async () => {
+    // Renderiza os Pokémons padrão (silhuetas) na inicialização
+    renderPlaceholderPokemons();
 
-    const ol = document.getElementById("ol"); // Referência para a lista OL
+    // Carrega a lista básica de todos os Pokémons para o campo de busca
+    try {
+        allPokemonBasicData = await pokeApi.getAllPokemonBasicData();
+    } catch (error) {
+        console.error("Erro ao carregar lista básica de Pokémons:", error);
+    }
 
-    // 1. Carrega a lista básica de TODOS os Pokémons UMA ÚNICA VEZ
-    pokeApi.getAllPokemonBasicData()
-        .then(data => {
-            allPokemonBasicData = data;
-            console.log(`Lista básica de ${allPokemonBasicData.length} Pokémons carregada para busca local.`);
-            
-            // Passa a função de preenchimento do card E a lista de dados básicos para setupCardDetailsEvents
-            setupCardDetailsEvents(displayPokemonDetails, allPokemonBasicData); 
-            
-            // Renderiza as silhuetas na inicialização
-            renderPlaceholderPokemons(pokemonLimit); 
-        })
-        .catch(error => {
-            console.error("Erro ao carregar a lista básica de Pokémons. A busca pode não funcionar como esperado.", error);
-            ol.innerHTML = '<li>Erro ao carregar dados iniciais. Tente novamente.</li>';
-            // Se houver erro ao carregar dados básicos, ainda inicialize o setup de eventos para não quebrar tudo
-            setupCardDetailsEvents(displayPokemonDetails, []); // Passa array vazio em caso de erro
-        });
+    const searchInput = document.getElementById("iput");
+    const searchButton = document.getElementById("btn-search"); // Adicione este ID no HTML para o botão de busca.
 
+    // Desabilita o campo de busca e o botão de busca por padrão
+    if (searchInput) {
+        searchInput.disabled = true;
+        searchInput.placeholder = 'Selecione o tipo de busca';
+    }
+    if (searchButton) {
+        searchButton.disabled = true;
+    }
 
-    const searchInput = document.getElementById('iput');
-    const searchButton = document.getElementById('btn');
+    // Configura o seletor de tipo de busca
+    setupSearchTypeSelection((selectedType) => {
+        currentSearchType = selectedType; // Armazena o tipo de busca selecionado
 
-    setupSearchTypeSelection(
-        (selectedType) => {
-            console.log('*** Callback de Seleção de Tipo Acionado ***');
-            console.log(`O tipo de busca selecionado AGORA é: ${selectedType}`);
-
-            if (searchInput) {
-                searchInput.value = ''; // Limpa o input de busca ao mudar o tipo
+        if (searchInput) {
+            searchInput.disabled = false; // Habilita o campo de busca
+            searchInput.value = ''; // Limpa o campo ao mudar o tipo
+            if (selectedType === 'number') {
+                searchInput.type = 'number';
+                searchInput.placeholder = 'Buscar por número (ex: 25)';
+            } else if (selectedType === 'name') {
+                searchInput.type = 'text';
+                searchInput.placeholder = 'Buscar por nome (ex: pikachu)';
             }
-
-            // Quando seleciona um tipo, carrega a lista padrão (primeiros [pokemonLimit-> quantidade que for informada] Pokémons reais)
-            if (selectedType === 'number' || selectedType === 'name') {
-                console.log(`--> O usuário selecionou "${selectedType}". Carregando lista padrão de Pokémons.`);
-                loadAndRenderPokemons(pokeApi.getPokemons(0, pokemonLimit));
-            } else {
-                console.log('--> Tipo de busca desconhecido ou não selecionado. Exibindo mensagem inicial.');
-                renderPlaceholderPokemons(pokemonLimit); 
-            }
+            // Foco no input após a seleção do tipo
+            searchInput.focus(); 
         }
-    );
+        if (searchButton) {
+            searchButton.disabled = false; // Habilita o botão de busca
+        }
 
-    if (searchButton && searchInput) {
-        // Listener para o clique no botão (aciona busca exata, se houver termo)
+        loadAndRenderPokemons(pokeApi.getPokemons(0, pokemonLimit)); 
+    });
+
+    
+
+    // Listener para o clique no botão de busca
+    if (searchButton) {
         searchButton.addEventListener('click', () => {
             const searchTerm = searchInput.value.trim();
-            if (searchTerm) {
-                console.log(`Busca exata acionada por botão para: ${searchTerm}`);
-                loadAndRenderPokemons(pokeApi.getPokemonByNameOrId(searchTerm));
+
+            if (!searchTerm) { // Não faz a busca se o campo estiver vazio
+                loadAndRenderPokemons(pokeApi.getPokemons(0, pokemonLimit)); 
+                return;
+            }
+
+            
+            if (currentSearchType === 'number') {
+                // Converte para número e busca
+                const pokemonNumber = parseInt(searchTerm, 10);
+                if (!isNaN(pokemonNumber) && pokemonNumber > 0) {
+                    loadAndRenderPokemons(pokeApi.getPokemonByNameOrId(pokemonNumber));
+                } else {
+                    alert("Por favor, insira um número de Pokémon válido.");
+                    renderPlaceholderPokemons();
+                }
+            } else if (currentSearchType === 'name') {
+                // Busca por nome (API já lida com IDs também, mas aqui é para nome)
+                loadAndRenderPokemons(pokeApi.getPokemonByNameOrId(searchTerm.toLowerCase()));
             } else {
-                console.log("Campo de busca vazio. O botão 'Sort' abrirá/fechará os filtros.");
+                alert("Por favor, selecione um tipo de busca (Número ou Nome).");
+                renderPlaceholderPokemons();
             }
         });
+    }
 
-        // Listener para a tecla ENTER no campo de busca (aciona busca exata, se houver termo)
-        searchInput.addEventListener('keypress', (event) => {
+
+    // Listener para o evento 'keydown' no campo de busca (especificamente para 'Enter')
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (event) => {
             if (event.key === 'Enter') {
-                event.preventDefault();
+                event.preventDefault(); // Impede o envio do formulário padrão
                 const searchTerm = searchInput.value.trim();
-                if (searchTerm) {
-                    console.log(`Busca exata acionada por ENTER para: ${searchTerm}`);
-                    loadAndRenderPokemons(pokeApi.getPokemonByNameOrId(searchTerm));
-                } else {
-                    console.log("Pressionado ENTER com campo de busca vazio. Recarregando lista padrão.");
+
+                if (!searchTerm) { // Não faz a busca se o campo estiver vazio
                     loadAndRenderPokemons(pokeApi.getPokemons(0, pokemonLimit));
+                    return;
+                }
+
+                if (currentSearchType === 'number') {
+                    const pokemonNumber = parseInt(searchTerm, 10);
+                    if (!isNaN(pokemonNumber) && pokemonNumber > 0) {
+                        loadAndRenderPokemons(pokeApi.getPokemonByNameOrId(pokemonNumber));
+                    } else {
+                        alert("Por favor, insira um número de Pokémon válido.");
+                        loadAndRenderPokemons(pokeApi.getPokemons(0, pokemonLimit));
+                    }
+                } else if (currentSearchType === 'name') {
+                    loadAndRenderPokemons(pokeApi.getPokemonByNameOrId(searchTerm.toLowerCase()));
+                } else {
+                    alert("Por favor, selecione um tipo de busca (Número ou Nome) antes de pesquisar.");
+                    renderPlaceholderPokemons();
                 }
             }
         });
 
-        // Listener para o evento 'input' no campo de busca (busca "ao digitar")
+        // Listener para o evento 'input' no campo de busca (busca "ao digitar" ou validação)
         searchInput.addEventListener('input', (event) => {
-            const searchTerm = event.target.value.trim();
-
-            if (searchTerm.length >= 1) {
-                console.log(`Live search por: "${searchTerm}" (busca exata)`);
-                loadAndRenderPokemons(pokeApi.getPokemonByNameOrId(searchTerm));
-            } else if (searchTerm.length === 0) {
-                console.log("Campo de busca vazio. Recarregando lista padrão de Pokémons.");
-                loadAndRenderPokemons(pokeApi.getPokemons(0, pokemonLimit));
+            if (currentSearchType === 'number') {
+                // Permite apenas dígitos
+                event.target.value = event.target.value.replace(/[^0-9]/g, '');
+            } else if (currentSearchType === 'name') {
+                // Permite letras, espaços e hífens para nomes de Pokémon
+                event.target.value = event.target.value.replace(/[^a-zA-Z\s-]/g, '');
             }
+            // Não chame loadAndRenderPokemons aqui diretamente para "live search" se a busca for por botão/Enter.
+            // A busca agora é mais controlada.
         });
-
     } else {
-        // CORRIGIDO: Esta mensagem agora reflete os IDs corretos que você usa no actions.js (iput e btn)
-        console.warn("Elemento 'input' com id='iput' ou 'button' com id='btn' não encontrado. Verifique seu HTML.");
+        console.warn("Elemento 'input' com id='iput' não encontrado. Verifique seu HTML.");
     }
+    
+    // Configura os eventos para o card de detalhes, passando a função de renderização
+    setupCardDetailsEvents(displayPokemonDetails, allPokemonBasicData);
+
+    // Opcional: Carregar e renderizar os primeiros Pokémons da lista padrão
+    // loadAndRenderPokemons(pokeApi.getPokemons(0, pokemonLimit));
 });
+
+// Exporta as funções que precisam ser acessíveis globalmente ou por outros módulos
+export { loadAndRenderPokemons, displayPokemonDetails };
