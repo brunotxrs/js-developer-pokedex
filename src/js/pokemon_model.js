@@ -10,6 +10,8 @@ class Pokemon {
     abilities = [];
     stats = [];
 
+    description;
+
 } 
 
 
